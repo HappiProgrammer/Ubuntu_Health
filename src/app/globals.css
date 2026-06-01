@@ -1,0 +1,235 @@
+/* Critical CSS - Above-the-fold styles load first */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-gray-200 transition-colors duration-200;
+  }
+  
+  html {
+    @apply h-full antialiased scroll-smooth;
+  }
+  
+  body {
+    @apply h-full text-slate-900;
+    background:
+      radial-gradient(circle at top, rgba(14, 165, 233, 0.12), transparent 30%),
+      radial-gradient(circle at 20% 80%, rgba(244, 114, 182, 0.12), transparent 28%),
+      linear-gradient(180deg, #fffaf4 0%, #f6efe5 52%, #efe6d8 100%);
+  }
+
+  .dark body {
+    @apply text-slate-100;
+    background:
+      radial-gradient(circle at top, rgba(56, 189, 248, 0.12), transparent 30%),
+      radial-gradient(circle at 20% 80%, rgba(236, 72, 153, 0.16), transparent 28%),
+      linear-gradient(180deg, #08111f 0%, #0f172a 55%, #111827 100%);
+  }
+
+  ::selection {
+    @apply bg-primary-200 text-slate-950;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply rounded-2xl bg-slate-950 px-5 py-3 font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5 hover:shadow-soft-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 dark:bg-white dark:text-slate-950;
+  }
+  
+  .btn-secondary {
+    @apply rounded-2xl border border-slate-300/80 bg-white/70 px-5 py-3 font-semibold text-slate-800 shadow-soft-sm backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-slate-400 hover:bg-white hover:shadow-soft dark:border-slate-700 dark:bg-slate-900/60 dark:text-white dark:hover:bg-slate-900;
+  }
+  
+  .btn-outline {
+    @apply rounded-2xl border border-slate-300/80 bg-transparent px-5 py-3 font-semibold text-slate-700 transition duration-300 hover:border-slate-900 hover:text-slate-950 dark:border-slate-700 dark:text-slate-200 dark:hover:border-white dark:hover:text-white;
+  }
+  
+  .card {
+    @apply rounded-[1.75rem] border border-white/60 bg-white/80 p-5 shadow-soft backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-soft-lg dark:border-white/10 dark:bg-slate-900/70;
+  }
+  
+  .input-field {
+    @apply w-full rounded-2xl border border-slate-300/80 bg-white/90 px-4 py-3 text-slate-900 placeholder:text-slate-400 shadow-sm backdrop-blur transition duration-300 focus:border-primary-400 focus:outline-none focus:ring-4 focus:ring-primary-500/10 dark:border-slate-700 dark:bg-slate-900/70 dark:text-white dark:placeholder:text-slate-500;
+  }
+  
+  .hero-gradient {
+    @apply bg-gradient-to-br from-primary-600 via-cyan-500 to-secondary-500;
+  }
+
+  .glass-morphism {
+    @apply rounded-[1.75rem] border border-white/60 bg-white/70 shadow-soft-lg backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/70;
+  }
+
+  .glass-panel {
+    @apply rounded-[2rem] border border-white/60 bg-white/70 shadow-soft-lg backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/70;
+  }
+
+  .pill-button {
+    @apply inline-flex min-h-10 items-center justify-center rounded-full border border-slate-300/70 bg-white/75 px-4 text-slate-800 shadow-soft-sm backdrop-blur transition duration-300 hover:border-slate-400 hover:bg-white dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:bg-slate-900;
+  }
+
+  .pill-muted {
+    @apply inline-flex items-center rounded-full border border-white/60 bg-white/70 px-4 py-2 text-sm font-medium text-slate-700 shadow-soft-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/60 dark:text-slate-200;
+  }
+
+  .icon-button {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-300/70 bg-white/75 text-slate-800 shadow-soft-sm backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:bg-slate-900;
+  }
+
+  .choice-card {
+    @apply rounded-[1.6rem] border border-white/60 bg-white/70 p-5 text-left shadow-soft backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-soft-lg dark:border-white/10 dark:bg-slate-900/70;
+  }
+
+  .choice-card-active {
+    @apply border-primary-300 bg-[linear-gradient(135deg,rgba(14,165,233,0.16),rgba(255,255,255,0.82))] ring-2 ring-primary-300/60 dark:border-primary-500 dark:bg-[linear-gradient(135deg,rgba(14,165,233,0.22),rgba(15,23,42,0.72))];
+  }
+
+  .dashboard-card {
+    @apply rounded-[1.5rem] border border-white/60 bg-white/80 p-5 shadow-soft backdrop-blur dark:border-white/10 dark:bg-slate-950/70;
+  }
+
+  .stat-tile {
+    @apply rounded-2xl border border-slate-200/80 bg-slate-50/90 p-4 dark:border-slate-800 dark:bg-slate-900/80;
+  }
+
+  .stat-value {
+    @apply font-display text-3xl text-slate-950 dark:text-white;
+  }
+
+  .stat-label {
+    @apply mt-1 text-sm text-slate-500 dark:text-slate-400;
+  }
+
+  .section-kicker {
+    @apply mb-3 text-sm font-bold uppercase tracking-[0.35em] text-primary-700 dark:text-primary-300;
+  }
+
+  .section-title {
+    @apply mb-4 font-display text-4xl leading-tight text-slate-950 dark:text-white md:text-5xl;
+  }
+
+  .section-copy {
+    @apply max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300;
+  }
+
+  .feature-card {
+    @apply rounded-[1.9rem] border border-white/60 bg-white/75 p-6 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-soft-lg dark:border-white/10 dark:bg-slate-900/70;
+  }
+
+  .feature-icon {
+    @apply mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 text-white shadow-soft;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-shake {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes floatDrift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0) scale(1.04);
+  }
+}
+
+.site-orb {
+  position: fixed;
+  z-index: -1;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: 0.7;
+  pointer-events: none;
+  animation: floatDrift 12s ease-in-out infinite;
+}
+
+.site-orb-a {
+  top: 8rem;
+  left: -4rem;
+  height: 18rem;
+  width: 18rem;
+  background: rgba(14, 165, 233, 0.18);
+}
+
+.site-orb-b {
+  right: -5rem;
+  top: 22rem;
+  height: 22rem;
+  width: 22rem;
+  background: rgba(244, 114, 182, 0.16);
+  animation-delay: -4s;
+}
+
+.site-orb-c {
+  bottom: 5rem;
+  left: 30%;
+  height: 16rem;
+  width: 16rem;
+  background: rgba(16, 185, 129, 0.12);
+  animation-delay: -8s;
+}
+
+@layer utilities {
+  .shadow-soft {
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+  }
+  
+  .shadow-soft-sm {
+    box-shadow: 0 2px 12px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .shadow-soft-lg {
+    box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.12);
+  }
+}
