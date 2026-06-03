@@ -97,28 +97,5 @@
         }
       ]
     }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/home-mobile.png",
-      "sizes": "375x812",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Home screen showing caregiver matching options"
-    },
-    {
-      "src": "/screenshots/dashboard-mobile.png",
-      "sizes": "375x812",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Dashboard with available jobs and messages"
-    },
-    {
-      "src": "/screenshots/chat-mobile.png",
-      "sizes": "375x812",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Chat interface for caregiver-client communication"
-    }
   ]
 }

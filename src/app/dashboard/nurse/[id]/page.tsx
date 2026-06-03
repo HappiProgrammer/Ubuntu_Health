@@ -11,6 +11,7 @@ interface NurseProfile {
   id: string
   full_name: string
   email: string
+  phone?: string
   bio?: string
   yearsOfExperience?: number
   specialties?: string[]
@@ -29,16 +30,31 @@ interface NurseProfile {
 export default function NurseProfilePage() {
   const params = useParams()
   const router = useRouter()
+
   const [nurse, setNurse] = useState<NurseProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const handleMessage = () => {
+    if (!nurse) return
+
+    // Replace with your messaging route
+    router.push(`/messages/${nurse.id}`)
+  }
+
+  const handleBook = () => {
+    if (!nurse) return
+
+    // Replace with your booking route
+    router.push(`/bookings/new?nurse=${nurse.id}`)
+  }
+
   useEffect(() => {
-    // Mock nurse data - replace with actual API call
     const mockNurses: NurseProfile[] = [
       {
         id: 'n1',
         full_name: 'Dr. Sarah Mbarga',
         email: 'sarah@example.com',
+        phone: '+237670000001',
         bio: 'Dedicated healthcare professional with over 8 years of experience in elder care and post-surgery rehabilitation. Passionate about providing compassionate care to patients.',
         yearsOfExperience: 8,
         specialties: ['Elder Care', 'Post-Surgery', 'Palliative Care'],
@@ -56,6 +72,7 @@ export default function NurseProfilePage() {
         id: 'n2',
         full_name: 'Dr. Jean Tondo',
         email: 'jean@example.com',
+        phone: '+237670000002',
         bio: 'Specialized pediatric nurse with a focus on child development and immunization programs. Committed to making healthcare comfortable for children.',
         yearsOfExperience: 5,
         specialties: ['Pediatric Care', 'Immunization', 'Child Development'],
@@ -71,10 +88,16 @@ export default function NurseProfilePage() {
       }
     ]
 
-    const foundNurse = mockNurses.find(n => n.id === params.id)
+    const nurseId = Array.isArray(params.id)
+      ? params.id[0]
+      : params.id
+
+    const foundNurse = mockNurses.find((n) => n.id === nurseId)
+
     if (foundNurse) {
       setNurse(foundNurse)
     }
+
     setLoading(false)
   }, [params.id])
 
@@ -83,7 +106,9 @@ export default function NurseProfilePage() {
       <div className="min-h-screen bg-[#FFF2E1] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A79277] mx-auto mb-4"></div>
-          <p className="text-[#8B7355] font-medium">Loading nurse profile...</p>
+          <p className="text-[#8B7355] font-medium">
+            Loading nurse profile...
+          </p>
         </div>
       </div>
     )
@@ -93,8 +118,13 @@ export default function NurseProfilePage() {
     return (
       <div className="min-h-screen bg-[#FFF2E1] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-xl font-bold text-[#5C4B37] mb-2">Nurse not found</p>
-          <Link href="/dashboard" className="text-[#A79277] hover:underline">
+          <p className="text-xl font-bold text-[#5C4B37] mb-2">
+            Nurse not found
+          </p>
+          <Link
+            href="/dashboard"
+            className="text-[#A79277] hover:underline"
+          >
             Return to dashboard
           </Link>
         </div>
@@ -115,22 +145,29 @@ export default function NurseProfilePage() {
               <ArrowLeft className="h-5 w-5" />
               <span className="font-medium">Back</span>
             </button>
+
             <div className="flex items-center space-x-3">
-              <button 
-                onClick={() => window.location.href = `tel:${nurse.email}`} // Placeholder for phone
+              <button
+                onClick={() => {
+                  if (nurse.phone) {
+                    window.location.href = `tel:${nurse.phone}`
+                  }
+                }}
                 className="flex items-center space-x-2 px-4 py-2 bg-[#F7E7CE] text-[#5C4B37] rounded-md border border-[#E8DCC8] hover:border-[#A79277] transition-all"
               >
                 <Phone className="h-4 w-4" />
                 <span className="text-sm font-semibold">Call</span>
               </button>
-              <button 
+
+              <button
                 onClick={handleMessage}
                 className="flex items-center space-x-2 px-4 py-2 bg-[#A79277] text-white rounded-md hover:bg-[#9A8469] transition-all"
               >
                 <MessageCircle className="h-4 w-4" />
                 <span className="text-sm font-semibold">Message</span>
               </button>
-              <button 
+
+              <button
                 onClick={handleBook}
                 className="flex items-center space-x-2 px-4 py-2 bg-[#A79277] text-white rounded-md hover:bg-[#9A8469] transition-all"
               >
@@ -145,10 +182,9 @@ export default function NurseProfilePage() {
       {/* Content */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <NurseProfileCard nurse={nurse} />
-        
-        {/* Profile Information Section */}
-        <NurseProfileInfo 
-          userId={params.id as string}
+
+        <NurseProfileInfo
+          userId={nurse.id}
           onProfileUpdate={(updatedProfile) => {
             console.log('Profile updated:', updatedProfile)
           }}

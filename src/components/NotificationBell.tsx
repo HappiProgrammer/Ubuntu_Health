@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Bell, X, Check, AlertCircle, Info, Calendar, UserCheck } from 'lucide-react'
+import { supabase } from '@/lib/supabase'
 
 interface Notification {
   id: string

@@ -38,10 +38,21 @@ if (!isMockMode && supabaseUrl && supabaseAnonKey) {
   })
 }
 
+// Define unified client type
+export type SupabaseClient = {
+  auth: any
+  from: (table: string) => any
+  channel: (name: string) => any
+  removeChannel: (channel: any) => any
+  isMockMode: boolean
+}
+
 // Export a unified client that works in both modes
-export const supabase = {
+export const supabase: SupabaseClient = {
   auth: isMockMode ? mockAuth : supabaseClient.auth,
   from: isMockMode ? mockDb.from : supabaseClient.from,
+  channel: (name: string) => isMockMode ? { on: () => ({ subscribe: () => ({}) }) } : supabaseClient.channel(name),
+  removeChannel: (channel: any) => isMockMode ? {} : supabaseClient.removeChannel(channel),
   isMockMode
 }
 

@@ -255,6 +255,37 @@ function calculateQualityScore(
 }
 
 /**
+ * Calculate match score between a nurse and a care request
+ */
+export function calculateMatchScore(nurse: any, request: any): number {
+  let matchScore = 0
+
+  // 1. Specialty Match (40 points)
+  const requestKeywords = extractKeywords(request.description || '')
+  const specialtyMatches = calculateSpecialtyMatch(nurse.specialties || [], requestKeywords)
+  matchScore += specialtyMatches * 40
+
+  // 2. Availability Match (30 points)
+  const availabilityScore = calculateAvailability(
+    nurse.availableDays || [],
+    nurse.availableTimeSlots || [],
+    request.start_date,
+    request.preferredTime
+  )
+  matchScore += availabilityScore * 30
+
+  // 3. Location Proximity (20 points)
+  const locationScore = calculateLocationMatch(nurse.location_address || '', request.location_address || '')
+  matchScore += locationScore * 20
+
+  // 4. Experience & Rating (10 points)
+  const qualityScore = calculateQualityScore(nurse.yearsOfExperience || 0, nurse.rating || 0)
+  matchScore += qualityScore * 10
+
+  return Math.round(matchScore)
+}
+
+/**
  * Find and save potential matches for a care request
  */
 export async function findAndSaveMatches(requestId: string, supabase: any) {
@@ -298,13 +329,13 @@ export async function findAndSaveMatches(requestId: string, supabase: any) {
         )
         return { nurse, score }
       })
-      .filter(m => m.score >= 50) // Only keep matches with score >= 50
-      .sort((a, b) => b.score - a.score)
+      .filter((m: any) => m.score >= 50) // Only keep matches with score >= 50
+      .sort((a: any, b: any) => b.score - a.score)
       .slice(0, 5) // Keep top 5
 
     // 4. Save matches to the database
     if (potentialMatches.length > 0) {
-      const matchInserts = potentialMatches.map(m => ({
+      const matchInserts = potentialMatches.map((m: any) => ({
         id: crypto.randomUUID(),
         care_request_id: requestId,
         nurse_id: m.nurse.id,

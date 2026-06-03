@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useTheme } from '@/hooks/useTheme'
 import { HomeFooter } from '@/components/home/HomeFooter'
 import { HomeHero } from '@/components/home/HomeHero'
 import { HomeCta, HomeFeatures, HomeHowItWorks, HomeMetrics, HomeTestimonials } from '@/components/home/HomeSections'
@@ -9,19 +10,7 @@ import { homeContent, type Language } from '@/lib/home-content'
 export default function HomePage() {
   const [selectedRole, setSelectedRole] = useState<'nurse' | 'client' | null>(null)
   const [language, setLanguage] = useState<Language>('en')
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
-
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark')
-    setTheme(isDark ? 'dark' : 'light')
-  }, [])
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-    document.documentElement.classList.toggle('dark', newTheme === 'dark')
-    localStorage.theme = newTheme
-  }
+  const { theme, toggleTheme } = useTheme()
 
   const content = homeContent[language]
 

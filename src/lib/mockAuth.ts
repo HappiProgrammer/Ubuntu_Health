@@ -228,7 +228,7 @@ export const mockAuth = {
 // Mock database operations
 export const mockDb = {
   from: (table: string) => {
-    return {
+    const chain: any = {
       insert: async (data: any | any[]) => {
         // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 500))
@@ -245,7 +245,6 @@ export const mockDb = {
               saveMockNurseProfile(profile)
             })
           } else if (table === 'care_requests') {
-            // Store care requests in localStorage
             const storedRequests = localStorage.getItem('mock_care_requests')
             const allRequests = storedRequests ? JSON.parse(storedRequests) : []
             allRequests.push(...dataArray)
@@ -258,138 +257,135 @@ export const mockDb = {
         }
       },
       
-      select: (columns?: string) => ({
-        eq: (column: string, value: any) => ({
-          single: async () => {
-            await new Promise(resolve => setTimeout(resolve, 300))
-            
-            if (table === 'profiles') {
-              const profiles = getMockProfiles()
-              const result = profiles.find((p: any) => (p as any)[column] === value)
-              return { data: result || null, error: null }
-            } else if (table === 'nurse_profiles') {
-              const profiles = getMockNurseProfiles()
-              const result = profiles.find((p: any) => (p as any)[column] === value)
-              return { data: result || null, error: null }
-            }
-            
-            return { data: null, error: null }
-          }
-        }),
-        order: () => ({
-          ascending: async (ascending: boolean) => {
-            await new Promise(resolve => setTimeout(resolve, 300))
-            
-            if (table === 'care_requests') {
-              // Load care requests from localStorage
-              const storedRequests = localStorage.getItem('mock_care_requests')
-              let mockRequests = storedRequests ? JSON.parse(storedRequests) : []
-              
-              // If no requests exist, create default ones including John's requests
-              if (mockRequests.length === 0) {
-                mockRequests = [
-                  {
-                    id: 'req_john_1',
-                    client_id: 'user1',
-                    client_name: 'John Doe',
-                    title: 'Elderly Father Needs Daily Care Assistance',
-                    description: 'Looking for an experienced nurse to help my 78-year-old father with daily activities including medication management, meal preparation, and light exercise. He has mild diabetes and needs someone patient and compassionate.',
-                    care_type: 'elder',
-                    urgency: 'high',
-                    location_address: 'Akwa, Douala',
-                    start_date: new Date().toISOString(),
-                    budget: 25000,
-                    status: 'open',
-                    created_at: new Date(Date.now() - 86400000).toISOString()
-                  },
-                  {
-                    id: 'req_john_2',
-                    client_id: 'user1',
-                    client_name: 'John Doe',
-                    title: 'Post-Surgery Recovery Care Needed',
-                    description: 'My wife recently underwent knee replacement surgery and requires professional nursing care for the next 3 weeks. Tasks include wound care, physical therapy assistance, and medication administration. Must have post-surgery experience.',
-                    care_type: 'medical',
-                    urgency: 'medium',
-                    location_address: 'Bonanjo, Douala',
-                    start_date: new Date(Date.now() + 86400000 * 2).toISOString(),
-                    budget: 35000,
-                    status: 'open',
-                    created_at: new Date(Date.now() - 172800000).toISOString()
-                  },
-                  {
-                    id: 'req_3',
-                    client_id: 'user3',
-                    client_name: 'Jean Dupont',
-                    title: 'Child Care - Infant Monitoring',
-                    description: 'Need a pediatric nurse to monitor our 6-month-old baby during the day while both parents work. Must have experience with infant care and CPR certification.',
-                    care_type: 'child',
-                    urgency: 'medium',
-                    location_address: 'Bali, Douala',
-                    start_date: new Date(Date.now() + 86400000 * 7).toISOString(),
-                    budget: 20000,
-                    status: 'open',
-                    created_at: new Date(Date.now() - 259200000).toISOString()
-                  },
-                  {
-                    id: 'req_4',
-                    client_id: 'user4',
-                    client_name: 'Marie Ekotto',
-                    title: 'General Home Care for Disabled Adult',
-                    description: 'Seeking a compassionate nurse to provide daily care for my 45-year-old brother who has mobility challenges. Assistance needed with bathing, dressing, meals, and companionship.',
-                    care_type: 'general',
-                    urgency: 'low',
-                    location_address: 'Deido, Douala',
-                    start_date: new Date(Date.now() + 86400000 * 5).toISOString(),
-                    budget: 18000,
-                    status: 'open',
-                    created_at: new Date(Date.now() - 345600000).toISOString()
-                  },
-                  {
-                    id: 'req_5',
-                    client_id: 'user3',
-                    client_name: 'Jean Dupont',
-                    title: 'Emergency Diabetes Management Care',
-                    description: 'Urgent need for a nurse experienced in diabetes management to help stabilize my mother\'s blood sugar levels. She was recently diagnosed and needs immediate professional guidance.',
-                    care_type: 'medical',
-                    urgency: 'high',
-                    location_address: 'New Bell, Douala',
-                    start_date: new Date().toISOString(),
-                    budget: 30000,
-                    status: 'open',
-                    created_at: new Date(Date.now() - 43200000).toISOString()
-                  }
-                ]
-                // Save to localStorage
-                localStorage.setItem('mock_care_requests', JSON.stringify(mockRequests))
+      select: (columns?: string) => {
+        return chain
+      },
+
+      eq: (column: string, value: any) => {
+        chain._filter = { column, value }
+        return chain
+      },
+
+      match: (filters: Record<string, any>) => {
+        chain._matches = filters
+        return chain
+      },
+
+      order: (column: string, { ascending = true } = {}) => {
+        chain._order = { column, ascending }
+        return chain
+      },
+
+      limit: (count: number) => {
+        chain._limit = count
+        return chain
+      },
+
+      range: (from: number, to: number) => {
+        chain._range = { from, to }
+        return chain
+      },
+
+      single: async () => {
+        await new Promise(resolve => setTimeout(resolve, 300))
+        const data = await chain._execute()
+        return { data: Array.isArray(data) ? data[0] : data, error: null }
+      },
+
+      then: (onfulfilled?: (value: any) => any) => {
+        return chain._execute().then(onfulfilled)
+      },
+
+      _execute: async () => {
+        await new Promise(resolve => setTimeout(resolve, 300))
+        let result: any[] = []
+
+        if (table === 'profiles') {
+          result = getMockProfiles()
+        } else if (table === 'nurse_profiles') {
+          result = getMockNurseProfiles()
+        } else if (table === 'care_requests') {
+          const storedRequests = localStorage.getItem('mock_care_requests')
+          result = storedRequests ? JSON.parse(storedRequests) : []
+          
+          if (result.length === 0) {
+            // Default mock data if empty
+            result = [
+              {
+                id: 'req_john_1',
+                client_id: 'user1',
+                client_name: 'John Doe',
+                title: 'Elderly Father Needs Daily Care Assistance',
+                description: 'Looking for an experienced nurse to help my 78-year-old father with daily activities including medication management, meal preparation, and light exercise. He has mild diabetes and needs someone patient and compassionate.',
+                care_type: 'elder',
+                urgency: 'high',
+                location_address: 'Akwa, Douala',
+                start_date: new Date().toISOString(),
+                budget: 25000,
+                status: 'open',
+                created_at: new Date(Date.now() - 86400000).toISOString()
               }
-              
-              return { data: ascending ? mockRequests : mockRequests.reverse(), error: null }
-            }
-            
-            return { data: [], error: null }
+            ]
+            localStorage.setItem('mock_care_requests', JSON.stringify(result))
           }
-        })
-      }),
-      
-      update: (data: any) => ({
-        eq: async (column: string, value: any) => {
-          await new Promise(resolve => setTimeout(resolve, 400))
-          
-          if (table === 'profiles') {
-            const profiles = getMockProfiles()
-            const index = profiles.findIndex((p: any) => (p as any)[column] === value)
-            
-            if (index >= 0) {
-              profiles[index] = { ...profiles[index], ...data }
-              localStorage.setItem(MOCK_PROFILES_KEY, JSON.stringify(profiles))
-            }
-            
-            return { data: profiles[index] || null, error: null }
-          }
-          
-          return { data: null, error: new Error('Not implemented') }
         }
-      })
+
+        // Apply filters
+        if (chain._filter) {
+          result = result.filter(item => item[chain._filter.column] === chain._filter.value)
+        }
+
+        if (chain._matches) {
+          result = result.filter(item => 
+            Object.entries(chain._matches).every(([col, val]) => item[col] === val)
+          )
+        }
+
+        // Apply order
+        if (chain._order) {
+          result.sort((a, b) => {
+            const valA = a[chain._order.column]
+            const valB = b[chain._order.column]
+            if (valA < valB) return chain._order.ascending ? -1 : 1
+            if (valA > valB) return chain._order.ascending ? 1 : -1
+            return 0
+          })
+        }
+
+        // Apply range/limit
+        if (chain._range) {
+          result = result.slice(chain._range.from, chain._range.to + 1)
+        } else if (chain._limit) {
+          result = result.slice(0, chain._limit)
+        }
+
+        // Reset state for next query
+        chain._filter = null
+        chain._matches = null
+        chain._order = null
+        chain._limit = null
+        chain._range = null
+
+        return result
+      },
+
+      update: async (data: any) => {
+        await new Promise(resolve => setTimeout(resolve, 400))
+        // Basic update implementation using existing filters
+        if (chain._filter && table === 'profiles') {
+          const profiles = getMockProfiles()
+          const index = profiles.findIndex((p: any) => p[chain._filter.column] === chain._filter.value)
+          
+          if (index >= 0) {
+            profiles[index] = { ...profiles[index], ...data }
+            localStorage.setItem(MOCK_PROFILES_KEY, JSON.stringify(profiles))
+            return { data: profiles[index], error: null }
+          }
+        }
+        return { data: null, error: new Error('Update failed or not implemented for this table') }
+      }
     }
+
+    return chain
   }
 }

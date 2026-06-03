@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import { useTheme } from '@/hooks/useTheme'
 
 // Lazy load heavy components with loading states
 const NurseMap = dynamic(() => import('@/components/NurseMap'), {
@@ -136,7 +137,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterUrgency, setFilterUrgency] = useState('all')
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const { theme, toggleTheme } = useTheme()
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [currentView, setCurrentView] = useState<'month' | 'week' | 'day'>('month')
@@ -162,8 +163,6 @@ export default function DashboardPage() {
   useEffect(() => {
     checkUser()
     loadData()
-    const isDark = document.documentElement.classList.contains('dark')
-    setTheme(isDark ? 'dark' : 'light')
     
     // Throttle mouse tracking for better performance
     let ticking = false
@@ -279,18 +278,6 @@ export default function DashboardPage() {
     setSelectedTimeSlot(null)
     setAvailableHours([])
   }, [selectedDoctor, selectedBookingDate, selectedTimeSlot])
-
-  const toggleTheme = useCallback(() => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark')
-      localStorage.theme = 'dark'
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.theme = 'light'
-    }
-  }, [theme])
 
   const checkUser = async () => {
     if (isMockMode) {

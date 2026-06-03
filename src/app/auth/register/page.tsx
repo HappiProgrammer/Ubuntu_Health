@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { supabase } from '@/lib/supabase'
-import { Camera, Upload, MapPin, Eye, EyeOff, Check, X, Moon, Sun, Shield, AlertCircle } from 'lucide-react'
+import { useTheme } from '@/hooks/useTheme'
+import { Camera, Upload, MapPin, Eye, EyeOff, Check, Moon, Sun, Shield, AlertCircle } from 'lucide-react'
 
 const registerSchema = z.object({
   email: z.string().email('Valid email required'),
@@ -31,7 +32,7 @@ const registerSchema = z.object({
 
 type RegisterFormData = z.infer<typeof registerSchema>
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
@@ -44,25 +45,8 @@ export default function RegisterPage() {
   const [certifications, setCertifications] = useState<File[]>([])
   const [scanningId, setScanningId] = useState(false)
   const [scannedIdText, setScannedIdText] = useState('')
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const { theme, toggleTheme } = useTheme()
   const isMockMode = (supabase as any).isMockMode
-
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark')
-    setTheme(isDark ? 'dark' : 'light')
-  }, [])
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark')
-      localStorage.theme = 'dark'
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.theme = 'light'
-    }
-  }
 
   const {
     register,
@@ -653,5 +637,17 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#FFF2E1] to-[#F7E7CE]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#A79277]"></div>
+      </div>
+    }>
+      <RegisterForm />
+    </Suspense>
   )
 }
