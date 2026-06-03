@@ -157,16 +157,3 @@ export default function NurseProfilePage() {
     </div>
   )
 }
-d nurse={nurse} />
-        
-        {/* Profile Information Section */}
-        <NurseProfileInfo 
-          userId={params.id as string}
-          onProfileUpdate={(updatedProfile) => {
-            console.log('Profile updated:', updatedProfile)
-          }}
-        />
-      </div>
-    </div>
-  )
-}
