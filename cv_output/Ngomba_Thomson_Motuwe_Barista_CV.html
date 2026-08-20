@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ngomba Thomson Motuwe - Barista CV</title>
+  <style>
+    :root {
+      --ink: #161616;
+      --muted: #565656;
+      --rule: #d8d8d8;
+      --soft: #f5f5f5;
+      --panel: #242424;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #e9e9e9;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.2pt;
+      line-height: 1.34;
+    }
+
+    body {
+      padding: 18px;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.16);
+      padding: 12mm 13mm;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 15px;
+      align-items: center;
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 11px;
+      margin-bottom: 10px;
+    }
+
+    .photo {
+      width: 112px;
+      height: 112px;
+      border-radius: 4px;
+      object-fit: cover;
+      object-position: center top;
+      border: 1px solid var(--rule);
+      background: #fff;
+      filter: grayscale(100%);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 27pt;
+      line-height: 0.95;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .target {
+      margin: 6px 0 7px;
+      color: var(--panel);
+      font-size: 12.5pt;
+      font-weight: 700;
+    }
+
+    .contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px 14px;
+      color: var(--muted);
+      font-size: 9.4pt;
+      font-weight: 600;
+    }
+
+    .contact span {
+      white-space: nowrap;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 7px;
+    }
+
+    section {
+      break-inside: avoid;
+    }
+
+    h2 {
+      margin: 0 0 4px;
+      padding-bottom: 2px;
+      border-bottom: 1px solid var(--rule);
+      color: var(--ink);
+      font-size: 10.6pt;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .summary {
+      color: #252525;
+      font-size: 9.9pt;
+    }
+
+    .chips {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .chips li {
+      background: var(--soft);
+      border: 1px solid #e2e2e2;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 9pt;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .job {
+      margin-top: 6px;
+    }
+
+    .job:first-of-type {
+      margin-top: 0;
+    }
+
+    .job-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 2px;
+    }
+
+    .role {
+      font-size: 10.1pt;
+      font-weight: 800;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 9.1pt;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .company {
+      color: var(--muted);
+      font-size: 9.3pt;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 16px;
+    }
+
+    li {
+      margin: 1px 0;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .compact-list li {
+      margin: 2px 0;
+    }
+
+    .education-list,
+    .language-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .education-list li,
+    .language-list li {
+      margin: 2px 0;
+    }
+
+    .ref {
+      font-weight: 700;
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    @media print {
+      html,
+      body {
+        width: 210mm;
+        height: 297mm;
+        background: #fff;
+        padding: 0;
+      }
+
+      .page {
+        width: 210mm;
+        min-height: auto;
+        margin: 0;
+        padding: 8mm 11mm;
+        box-shadow: none;
+      }
+
+      body {
+        font-size: 9.1pt;
+        line-height: 1.24;
+      }
+
+      .header {
+        grid-template-columns: 90px 1fr;
+        gap: 12px;
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+      }
+
+      .photo {
+        width: 90px;
+        height: 90px;
+      }
+
+      h1 {
+        font-size: 22.5pt;
+        line-height: 0.96;
+      }
+
+      .target {
+        margin: 5px 0 6px;
+        font-size: 10.7pt;
+      }
+
+      .contact {
+        gap: 3px 10px;
+        font-size: 8.3pt;
+      }
+
+      .content {
+        display: block;
+      }
+
+      section {
+        margin-bottom: 6px;
+        break-inside: auto;
+      }
+
+      h2 {
+        margin-bottom: 3px;
+        font-size: 9.4pt;
+      }
+
+      .summary {
+        font-size: 8.7pt;
+      }
+
+      .chips {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 3px 5px;
+      }
+
+      .chips li {
+        padding: 3px 5px;
+        font-size: 7.9pt;
+      }
+
+      .role {
+        font-size: 9pt;
+      }
+
+      .company,
+      .meta {
+        font-size: 8.1pt;
+      }
+
+      .job {
+        margin-top: 5px;
+        break-inside: avoid;
+      }
+
+      ul {
+        padding-left: 14px;
+      }
+
+      li {
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page" aria-label="CV">
+    <header class="header">
+      <img class="photo" src="ngomba_thomson_motuwe_photo.png" alt="Ngomba Thomson Motuwe photo">
+      <div>
+        <h1>Ngomba Thomson Motuwe</h1>
+        <div class="target">Barista / Coffee Shop Worker | Hospitality Customer Service</div>
+        <div class="contact">
+          <span>Phone: +973 38729154</span>
+          <span>Email: Thomsonngomba8@gmail.com</span>
+          <span>Location: Manama, Kingdom of Bahrain</span>
+          <span>Nationality: Cameroonian</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <section>
+        <h2>Professional Summary</h2>
+        <p class="summary">Hospitality customer service professional with 3 years of combined restaurant and hotel receptionist experience in Dubai, including 1 year at Belcanto Restaurant and 2 years at Concorde Deira Hotel. Targeting Barista / Coffee Shop Worker roles in Bahrain, bringing strong guest greeting, communication skills, multitasking, time management, attention to detail, cleaning procedures, and a hygiene-conscious approach supported by Occupational Health &amp; Safety Management education. Reliable in fast-paced environments, with good English and French plus basic Arabic.</p>
+      </section>
+
+      <section>
+        <h2>Core Competencies</h2>
+        <ul class="chips">
+          <li>Customer Service</li>
+          <li>Guest Experience</li>
+          <li>Hospitality Service</li>
+          <li>Communication Skills</li>
+          <li>Attention to Detail</li>
+          <li>Multitasking</li>
+          <li>Time Management</li>
+          <li>Cleaning Procedures</li>
+          <li>Hygiene Standards</li>
+          <li>Telephone Handling</li>
+          <li>Problem Solving</li>
+          <li>Fast-Paced Environment</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Work Experience</h2>
+        <div class="job">
+          <div class="job-head">
+            <div class="role">Receptionist</div>
+            <div class="meta">Duration: 1 year</div>
+          </div>
+          <div class="company">Belcanto Restaurant, Dubai, U.A.E.</div>
+          <ul>
+            <li>Greeted and welcomed visitors with courteous, professional service, creating a positive first impression in a hospitality environment.</li>
+            <li>Provided accurate information and assistance to clients and visitors, supporting a smooth guest experience.</li>
+            <li>Maintained a clean, organized, and presentable reception area to support professional service standards.</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <div class="role">Receptionist</div>
+            <div class="meta">Duration: 2 years</div>
+          </div>
+          <div class="company">Concorde Deira Hotel, Dubai, U.A.E.</div>
+          <ul>
+            <li>Answered and directed telephone calls efficiently to the appropriate personnel, strengthening service coordination.</li>
+            <li>Scheduled appointments, managed calendars, and handled incoming and outgoing correspondence with organized time management.</li>
+            <li>Maintained and updated records and office files systematically, supporting accurate administration and follow-up.</li>
+            <li>Supported general administrative duties, including printing and filing, while maintaining attention to detail.</li>
+            <li>Followed security protocols by monitoring visitors and issuing passes when required.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="two-col">
+        <div>
+          <h2>Education</h2>
+          <ul class="education-list">
+            <li><strong>Master Diploma in Occupational Health &amp; Safety Management</strong></li>
+            <li><strong>Advanced Level Certificate</strong></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Languages</h2>
+          <ul class="language-list">
+            <li><strong>English:</strong> Good</li>
+            <li><strong>French:</strong> Good</li>
+            <li><strong>Arabic:</strong> Basic</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2>Skills</h2>
+        <ul class="compact-list">
+          <li>Strong customer service, guest assistance, and professional telephone handling.</li>
+          <li>Effective communication, problem-solving, organization, and professional attitude.</li>
+          <li>Basic computer and office software skills with accurate record and file management.</li>
+          <li>Reliable, punctual, detail-oriented, and comfortable managing multiple tasks in busy hospitality settings.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>References</h2>
+        <p class="ref">Available upon request.</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

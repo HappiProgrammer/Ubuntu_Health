@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Fraunces, Manrope } from 'next/font/google'
 import { AppointmentQueueProvider } from '@/context/AppointmentQueueContext'
 import './globals.css'
+import { FloatingSupportWidget } from '@/components/FloatingSupportWidget'
 
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope' })
 const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces' })
@@ -50,7 +51,7 @@ export default function RootLayout({
       <body className="h-full font-sans antialiased">
         <AppointmentQueueProvider>
           <div id="root" className="min-h-full flex flex-col">
-            {children}
+            {children}\n            <FloatingSupportWidget />
           </div>
         </AppointmentQueueProvider>
       </body>

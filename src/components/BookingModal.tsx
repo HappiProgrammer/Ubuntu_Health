@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Calendar, Clock, User, Phone, Mail, CheckCircle, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react'
+import { X, Calendar, Clock, User, Phone, Mail, CheckCircle, AlertCircle, ChevronLeft, ChevronRight, Smartphone, ShieldCheck } from 'lucide-react'
+import { PaymentModal } from '@/components/payments/PaymentModal'
+import { PaymentReceipt } from '@/lib/payments/types'
 
 interface BookingModalProps {
   isOpen: boolean
@@ -41,6 +43,7 @@ export default function BookingModal({
   const [errors, setErrors] = useState<Partial<BookingData>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [currentMonth, setCurrentMonth] = useState(new Date())
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
 
   if (!isOpen) return null
 
