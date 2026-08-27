@@ -1,17 +1,28 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { supabase } from '@/lib/supabase'
-import { Camera, Eye, EyeOff, AlertCircle, Check } from 'lucide-react'
+import { AuthHeader } from '@/components/auth/AuthHeader'
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  Check,
+  ArrowRight,
+  ShieldCheck,
+  Info
+} from 'lucide-react'
 
 const loginSchema = z.object({
-  email: z.string().email('Valid email required'),
-  password: z.string().min(1, 'Password required'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
   rememberMe: z.boolean().optional()
 })
 
@@ -50,340 +61,270 @@ export default function LoginPage() {
       if (authError) throw authError
 
       if (authData?.user) {
-        setSuccess('Login successful! Redirecting...')
+        setSuccess('Welcome back! Redirecting to your dashboard...')
         setTimeout(() => {
           router.push('/dashboard')
         }, 1000)
       } else {
-        throw new Error('Login failed - no user data returned')
+        throw new Error('Login failed — no user data returned.')
       }
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please check your credentials.')
+      setError(err.message || 'Invalid email or password. Please check your credentials.')
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Panel - Branding with #FF6044 */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#FF6044] via-[#FF7A5C] to-[#FF9474]">
-        {/* Background Pattern */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5"></div>
-          <div className="absolute top-20 left-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-          {/* Decorative circles */}
-          <div className="absolute top-40 right-40 w-32 h-32 border-4 border-white/20 rounded-full"></div>
-          <div className="absolute bottom-60 left-32 w-24 h-24 border-4 border-white/20 rounded-full"></div>
-        </div>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-between relative overflow-hidden">
+      {/* Ambient BridgeCare Glow Orbs */}
+      <div className="site-orb site-orb-a" />
+      <div className="site-orb site-orb-b" />
+      <div className="site-orb site-orb-c" />
 
-        {/* Content */}
-        <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="bg-white rounded-lg p-2.5 shadow-lg">
-              <Camera className="h-6 w-6 text-[#FF6044]" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white">CareTaker</h1>
-              <p className="text-xs text-white/80">Healthcare Management</p>
-            </div>
-          </Link>
+      {/* Unified BridgeCare Auth Header */}
+      <AuthHeader />
 
-          {/* Center Content */}
-          <div className="flex-1 flex flex-col justify-center max-w-lg">
-            {/* Medical Illustration */}
-            <div className="relative mb-8">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                    <div className="bg-white/30 rounded-full w-12 h-12 flex items-center justify-center mb-3 mx-auto">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                    </div>
-                    <p className="text-xs text-white text-center font-medium">Doctors</p>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                    <div className="bg-white/30 rounded-full w-12 h-12 flex items-center justify-center mb-3 mx-auto">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <p className="text-xs text-white text-center font-medium">Appointments</p>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                    <div className="bg-white/30 rounded-full w-12 h-12 flex items-center justify-center mb-3 mx-auto">
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                      </svg>
-                    </div>
-                    <p className="text-xs text-white text-center font-medium">Secure</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <h2 className="text-4xl font-bold text-white mb-4">
-              Welcome Back to
-              <span className="block">
-                CareTaker Health
-              </span>
-            </h2>
-            <p className="text-base text-white/90 leading-relaxed">
-              Access your healthcare dashboard, manage appointments, and connect with medical professionals seamlessly.
-            </p>
-
-            {/* Stats */}
-            <div className="mt-8 grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <p className="text-3xl font-bold text-white">500+</p>
-                <p className="text-xs text-white/80 mt-1">Doctors</p>
-              </div>
-              <div className="text-center border-x border-white/30">
-                <p className="text-3xl font-bold text-white">10k+</p>
-                <p className="text-xs text-white/80 mt-1">Patients</p>
-              </div>
-              <div className="text-center">
-                <p className="text-3xl font-bold text-white">50+</p>
-                <p className="text-xs text-white/80 mt-1">Hospitals</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom - Testimonial */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-            <p className="text-sm text-white italic mb-3">
-              "CareTaker transformed how we manage patient care. The platform is intuitive and efficient."
-            </p>
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#FF6044] font-bold text-sm">
-                DR
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-white">Dr. Rachel M.</p>
-                <p className="text-xs text-white/80">Chief Medical Officer</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Right Panel - Login Form with cream background */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-[#FFF2E1]">
+      {/* Main Authentication Centerstage */}
+      <main className="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 lg:px-8 z-10">
         <div className="w-full max-w-md">
-          {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center justify-center space-x-3 mb-8">
-            <div className="bg-gradient-to-br from-[#A79277] to-[#8B7355] rounded-lg p-2.5 shadow-lg shadow-[#A79277]/30">
-              <Camera className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-[#5C4B37]">CareTaker</h1>
-              <p className="text-xs text-[#8B7355]">Healthcare Management</p>
-            </div>
-          </div>
-
-          {/* Form Card */}
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl border border-[#E8DCC8] shadow-xl shadow-[#A79277]/10 p-8">
-            {/* Header */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#5C4B37] mb-2">Sign In</h2>
-              <p className="text-sm text-[#8B7355]">Enter your credentials to access your account</p>
+          {/* Card Container */}
+          <div className="glass-panel rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/90 shadow-soft-lg p-6 sm:p-9 backdrop-blur-xl animate-fade-in">
+            {/* Card Header Badge & Titles */}
+            <div className="mb-6 text-center sm:text-left">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-950/60 border border-primary-100 dark:border-primary-900/40 text-xs font-bold text-primary-700 dark:text-primary-300 mb-3">
+                <ShieldCheck className="h-3.5 w-3.5 text-primary-600 dark:text-primary-400" />
+                <span>Secure Patient & Provider Portal</span>
+              </div>
+              <h1 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-950 dark:text-white">
+                Welcome back
+              </h1>
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                Sign in to your BridgeCare account below.
+              </p>
             </div>
 
             {/* Mock Mode Alert */}
             {isMockMode && (
-              <div className="mb-6 bg-[#A79277]/10 border border-[#A79277]/20 rounded-lg p-4 flex items-start space-x-3">
-                <div className="bg-[#A79277]/20 rounded-full p-1.5 flex-shrink-0">
-                  <AlertCircle className="h-4 w-4 text-[#A79277]" />
+              <div className="mb-6 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200/80 dark:border-sky-800/60 p-4 flex items-start gap-3 text-left">
+                <div className="rounded-xl bg-sky-100 dark:bg-sky-900/50 p-2 text-sky-600 dark:text-sky-400 shrink-0">
+                  <Info className="h-4 w-4" />
                 </div>
-                <div className="text-sm">
-                  <p className="font-semibold text-[#A79277] mb-1">Demo Mode Active</p>
-                  <p className="text-[#8B7355] text-xs">Use the credentials you registered with to sign in.</p>
+                <div className="text-xs">
+                  <p className="font-bold text-sky-900 dark:text-sky-200">Demo Mode Active</p>
+                  <p className="text-sky-700 dark:text-sky-300 mt-0.5">
+                    You can use your registered credentials or demo accounts to test the platform.
+                  </p>
                 </div>
               </div>
             )}
 
-            <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
-              {/* Error/Success Messages */}
-              {error && (
-                <div 
-                  role="alert" 
-                  className="bg-red-500/10 border border-red-500/20 text-red-600 px-4 py-3 rounded-lg flex items-center space-x-3"
-                  tabIndex={0}
-                >
-                  <div className="bg-red-500/20 rounded-full p-1.5 flex-shrink-0">
-                    <AlertCircle className="h-4 w-4" />
-                  </div>
-                  <span className="text-sm">{error}</span>
+            {/* Error Banner */}
+            {error && (
+              <div
+                role="alert"
+                className="mb-5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/60 text-red-700 dark:text-red-300 px-4 py-3.5 rounded-2xl flex items-start gap-3 text-sm animate-fade-in"
+                tabIndex={0}
+              >
+                <div className="bg-red-100 dark:bg-red-900/50 rounded-xl p-1.5 flex-shrink-0 text-red-600 dark:text-red-400 mt-0.5">
+                  <AlertCircle className="h-4 w-4" />
                 </div>
-              )}
-              {success && (
-                <div 
-                  role="status" 
-                  className="bg-[#A79277]/10 border border-[#A79277]/20 text-[#A79277] px-4 py-3 rounded-lg flex items-center space-x-3"
-                  tabIndex={0}
-                >
-                  <div className="bg-[#A79277]/20 rounded-full p-1.5 flex-shrink-0">
-                    <Check className="h-4 w-4" />
-                  </div>
-                  <span className="text-sm">{success}</span>
-                </div>
-              )}
+                <span className="leading-snug">{error}</span>
+              </div>
+            )}
 
-              {/* Email */}
-              <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-semibold text-[#5C4B37]">
+            {/* Success Banner */}
+            {success && (
+              <div
+                role="status"
+                className="mb-5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-300 px-4 py-3.5 rounded-2xl flex items-center gap-3 text-sm animate-fade-in"
+                tabIndex={0}
+              >
+                <div className="bg-emerald-100 dark:bg-emerald-900/50 rounded-xl p-1.5 flex-shrink-0 text-emerald-600 dark:text-emerald-400">
+                  <Check className="h-4 w-4" />
+                </div>
+                <span className="font-medium">{success}</span>
+              </div>
+            )}
+
+            {/* Form */}
+            <form className="space-y-4 sm:space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
+              {/* Email Address */}
+              <div className="space-y-1.5">
+                <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                   Email Address
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-[#A79277]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
+                <div className="relative flex items-center">
+                  <Mail className="absolute left-4 h-5 w-5 text-slate-400 dark:text-slate-500 pointer-events-none" />
                   <input
                     {...register('email')}
                     id="email"
                     type="email"
                     autoComplete="email"
-                    className={`w-full pl-12 pr-4 py-3 bg-white border ${errors.email ? 'border-red-500' : 'border-[#D4C4B0]'} rounded-lg text-[#5C4B37] placeholder:text-[#A79277] focus:outline-none focus:border-[#A79277] focus:ring-2 focus:ring-[#A79277]/20 transition-all`}
+                    className={`w-full pl-11 pr-4 py-3 rounded-2xl border ${
+                      errors.email
+                        ? 'border-red-400 dark:border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                        : 'border-slate-300 dark:border-slate-700 focus:border-primary-500 focus:ring-primary-500/20'
+                    } bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm shadow-sm transition focus:outline-none focus:ring-2`}
                     placeholder="name@example.com"
                   />
                 </div>
                 {errors.email && (
-                  <p role="alert" className="text-xs text-red-600">{errors.email.message}</p>
+                  <p role="alert" className="text-xs text-red-600 dark:text-red-400 font-semibold mt-1">
+                    {errors.email.message}
+                  </p>
                 )}
               </div>
 
               {/* Password */}
-              <div className="space-y-2">
-                <label htmlFor="password" className="block text-sm font-semibold text-[#5C4B37]">
+              <div className="space-y-1.5">
+                <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                   Password
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-[#A79277]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  </div>
+                <div className="relative flex items-center">
+                  <Lock className="absolute left-4 h-5 w-5 text-slate-400 dark:text-slate-500 pointer-events-none" />
                   <input
                     {...register('password')}
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="current-password"
-                    className={`w-full pl-12 pr-12 py-3 bg-white border ${errors.password ? 'border-red-500' : 'border-[#D4C4B0]'} rounded-lg text-[#5C4B37] placeholder:text-[#A79277] focus:outline-none focus:border-[#A79277] focus:ring-2 focus:ring-[#A79277]/20 transition-all`}
-                    placeholder="Enter your password"
+                    className={`w-full pl-11 pr-12 py-3 rounded-2xl border ${
+                      errors.password
+                        ? 'border-red-400 dark:border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                        : 'border-slate-300 dark:border-slate-700 focus:border-primary-500 focus:ring-primary-500/20'
+                    } bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm shadow-sm transition focus:outline-none focus:ring-2`}
+                    placeholder="••••••••"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#A79277] hover:text-[#8B7355] transition-colors"
+                    className="absolute right-3.5 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg transition"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
                 {errors.password && (
-                  <p role="alert" className="text-xs text-red-600">{errors.password.message}</p>
+                  <p role="alert" className="text-xs text-red-600 dark:text-red-400 font-semibold mt-1">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
 
               {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
-                <label className="flex items-center space-x-2 cursor-pointer group">
-                  <div className="relative">
-                    <input
-                      {...register('rememberMe')}
-                      id="rememberMe"
-                      type="checkbox"
-                      className="peer sr-only"
-                    />
-                    <div className="w-5 h-5 border-2 border-[#D4C4B0] rounded bg-white peer-checked:bg-[#A79277] peer-checked:border-[#A79277] transition-all"></div>
-                    <Check className="absolute inset-0 h-5 w-5 text-white opacity-0 peer-checked:opacity-100 transition-opacity p-0.5" />
-                  </div>
-                  <span className="text-sm text-[#8B7355] group-hover:text-[#5C4B37]">Remember me</span>
+              <div className="flex items-center justify-between pt-1">
+                <label className="flex items-center space-x-2.5 cursor-pointer group select-none">
+                  <input
+                    {...register('rememberMe')}
+                    id="rememberMe"
+                    type="checkbox"
+                    className="h-4 w-4 rounded-md border-slate-300 dark:border-slate-700 text-primary-600 focus:ring-primary-500/20 transition cursor-pointer"
+                  />
+                  <span className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200 transition">
+                    Remember me
+                  </span>
                 </label>
-                <Link href="/auth/forgot-password" className="text-sm text-[#A79277] hover:text-[#8B7355] transition-colors">
+                <Link
+                  href="/auth/forgot-password"
+                  className="text-xs sm:text-sm font-semibold text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition"
+                >
                   Forgot password?
                 </Link>
               </div>
 
-              {/* Submit Button */}
+              {/* Primary CTA Submit Button */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-[#A79277] to-[#8B7355] hover:from-[#9A8469] hover:to-[#A79277] text-white font-bold py-3.5 px-4 rounded-lg shadow-lg shadow-[#A79277]/30 hover:shadow-[#A79277]/40 transform hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full btn-primary py-3.5 px-5 text-sm sm:text-base font-bold shadow-soft flex items-center justify-center gap-2 group transition active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed mt-2"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center space-x-2">
-                    <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     <span>Signing in...</span>
                   </div>
                 ) : (
-                  'Sign In'
+                  <>
+                    <span>Sign In</span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                  </>
                 )}
               </button>
 
               {/* Divider */}
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-[#E8DCC8]"></div>
+                  <div className="w-full border-t border-slate-200 dark:border-slate-800"></div>
                 </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-[#8B7355]">or continue with</span>
+                <div className="relative flex justify-center text-xs">
+                  <span className="px-3 bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 font-medium">
+                    or continue with
+                  </span>
                 </div>
               </div>
 
-              {/* Social Login Buttons */}
+              {/* Social Login Options */}
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  className="flex items-center justify-center px-4 py-2.5 bg-white border border-[#E8DCC8] rounded-lg text-[#5C4B37] hover:bg-[#F7E7CE] hover:border-[#D4C4B0] transition-all"
+                  onClick={() => setError('Google single sign-on will connect in production.')}
+                  className="btn-secondary py-2.5 px-4 text-xs font-semibold rounded-2xl flex items-center justify-center gap-2 shadow-soft-sm hover:border-primary-300 dark:hover:border-primary-700 transition"
                 >
-                  <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                  <svg className="h-4 w-4" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                   </svg>
-                  Google
+                  <span>Google</span>
                 </button>
                 <button
                   type="button"
-                  className="flex items-center justify-center px-4 py-2.5 bg-white border border-[#E8DCC8] rounded-lg text-[#5C4B37] hover:bg-[#F7E7CE] hover:border-[#D4C4B0] transition-all"
+                  onClick={() => setError('GitHub single sign-on will connect in production.')}
+                  className="btn-secondary py-2.5 px-4 text-xs font-semibold rounded-2xl flex items-center justify-center gap-2 shadow-soft-sm hover:border-primary-300 dark:hover:border-primary-700 transition"
                 >
-                  <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
                     <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"/>
                   </svg>
-                  GitHub
+                  <span>GitHub</span>
                 </button>
               </div>
             </form>
 
-            {/* Sign Up Link */}
-            <div className="mt-8 text-center pt-6 border-t border-[#E8DCC8]">
-              <span className="text-sm text-[#8B7355]">
+            {/* Footer Registration Link */}
+            <div className="mt-7 text-center pt-5 border-t border-slate-100 dark:border-slate-800">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                 Don't have an account?{' '}
-                <Link href="/auth/register" className="text-[#A79277] hover:text-[#8B7355] font-semibold transition-colors">
-                  Create Account
+                <Link
+                  href="/auth/register"
+                  className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-bold transition-colors"
+                >
+                  Create an account
                 </Link>
-              </span>
+              </p>
             </div>
           </div>
 
-          {/* Footer */}
-          <p className="mt-8 text-center text-xs text-[#A79277]">
-            By signing in, you agree to our{' '}
-            <Link href="/terms" className="text-[#8B7355] hover:text-[#5C4B37]">Terms of Service</Link>
-            {' '}and{' '}
-            <Link href="/privacy" className="text-[#8B7355] hover:text-[#5C4B37]">Privacy Policy</Link>
+          {/* Legal / Policy Footer */}
+          <p className="mt-6 text-center text-xs text-slate-500 dark:text-slate-500 leading-relaxed px-4">
+            By signing in, you agree to BridgeCare's{' '}
+            <Link href="/terms" className="underline hover:text-slate-700 dark:hover:text-slate-300 transition">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link href="/privacy" className="underline hover:text-slate-700 dark:hover:text-slate-300 transition">
+              Privacy Policy
+            </Link>
+            .
           </p>
         </div>
-      </div>
+      </main>
+
+      {/* Bottom spacing helper */}
+      <div className="h-6" />
     </div>
   )
 }
