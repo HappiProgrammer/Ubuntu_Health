@@ -48,10 +48,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="h-full font-sans antialiased">
+      <body className="h-full font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
         <AppointmentQueueProvider>
           <div id="root" className="min-h-full flex flex-col">
-            {children}\n            <FloatingSupportWidget />
+            {children}
+            <FloatingSupportWidget />
           </div>
         </AppointmentQueueProvider>
       </body>
