@@ -25,7 +25,7 @@ export function AuthHeader({ language = 'en', onLanguageToggle }: AuthHeaderProp
   const currentLang = onLanguageToggle ? language : internalLang
 
   return (
-    <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
+    <header className="w-full max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 pt-4 pb-2">
       <div className="glass-panel flex items-center justify-between gap-4 px-4 sm:px-6 py-3.5 backdrop-blur-xl shadow-soft-sm border-white/80 dark:border-white/10">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 group transition-transform active:scale-95">

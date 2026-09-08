@@ -16,9 +16,9 @@ const linkHrefs: Record<string, string> = {
 
 export function HomeFooter({ content }: { content: HomeCopy['footer'] }) {
   return (
-    <footer className="border-t border-slate-200/80 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl px-4 py-12 sm:px-6 lg:px-8 dark:border-white/10 mt-16">
-      <div className="mx-auto max-w-6xl space-y-10">
-        <div className="grid gap-10 lg:grid-cols-[1.1fr_1.4fr]">
+    <footer className="border-t border-slate-200/80 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl w-full px-4 py-12 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 dark:border-white/10 mt-16">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px] space-y-10">
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_1.4fr] 2xl:grid-cols-[1fr_1.5fr] 2xl:gap-16">
           
           {/* Brand Info */}
           <div>

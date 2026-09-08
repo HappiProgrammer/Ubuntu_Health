@@ -379,7 +379,7 @@ export default function MessageSystem({ currentUserId, currentUserRole }: Messag
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-[600px]">
+      <div className="flex items-center justify-center min-h-[500px] h-[calc(100vh-280px)] max-h-[850px] 2xl:max-h-[920px]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 dark:border-white mx-auto mb-4"></div>
           <p className="text-slate-600 dark:text-slate-400 font-medium">Loading messages...</p>
@@ -389,9 +389,9 @@ export default function MessageSystem({ currentUserId, currentUserRole }: Messag
   }
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden h-[600px] flex">
+    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden min-h-[500px] h-[calc(100vh-280px)] max-h-[850px] 2xl:max-h-[920px] flex">
       {/* Contacts Sidebar */}
-      <div className={`${selectedMatch ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-80 border-r border-slate-200 dark:border-slate-700`}>
+      <div className={`${selectedMatch ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-80 lg:w-96 2xl:w-[420px] border-r border-slate-200 dark:border-slate-700`}>
         <div className="p-4 border-b border-slate-200 dark:border-slate-700">
           <h3 className="font-bold text-slate-900 dark:text-white mb-3">Messages</h3>
           <div className="relative">

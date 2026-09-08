@@ -176,7 +176,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[#FFF2E1]">
       {/* Header */}
       <div className="bg-white border-b border-[#E8DCC8] sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-[#5C4B37]">My Profile</h1>
@@ -192,7 +192,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8">
         {/* Profile Header Card */}
         <div className="bg-white rounded-lg border border-[#E8DCC8] shadow-sm overflow-hidden mb-6">
           <div className="bg-gradient-to-r from-[#A79277] to-[#9A8469] px-6 py-8 text-white">

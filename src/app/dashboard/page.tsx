@@ -337,8 +337,8 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       {/* Clean Top Header */}
-      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90 px-4 sm:px-6 lg:px-8 py-3.5">
-        <div className="mx-auto max-w-7xl flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90 px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-3.5">
+        <div className="mx-auto max-w-7xl 2xl:max-w-[1680px] 3xl:max-w-[1920px] 4xl:max-w-[2200px] flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-600 to-cyan-500 text-white shadow-soft">
               <Heart className="h-5 w-5 fill-white" />
@@ -380,14 +380,14 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1680px] 3xl:max-w-[1920px] 4xl:max-w-[2200px] px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8 space-y-8">
         {/* Welcome Section */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl 2xl:text-4xl font-extrabold tracking-tight">
               Hello, {profile?.full_name?.split(' ')[0]} 👋
             </h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-sm 2xl:text-base text-slate-500 dark:text-slate-400 mt-1">
               {isNurse
                 ? 'Review open care requests and manage your caregiver schedule.'
                 : 'Manage verified nurse requests and track family care.'}
@@ -397,7 +397,7 @@ export default function DashboardPage() {
           {!isNurse && (
             <button
               onClick={() => setActiveTab('request')}
-              className="btn-primary gap-2 text-xs sm:text-sm py-2.5 px-5 shadow-soft"
+              className="btn-primary gap-2 text-xs sm:text-sm 2xl:text-base py-2.5 2xl:py-3 px-5 2xl:px-6 shadow-soft"
             >
               <Plus className="h-4 w-4" />
               <span>New Care Request</span>
@@ -406,7 +406,7 @@ export default function DashboardPage() {
         </div>
 
         {/* 4 Clean Metric Cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 2xl:gap-6">
           {isNurse ? (
             <>
               <div className="card">
@@ -576,7 +576,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 2xl:gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {filteredRequests.map(req => (
                 <div key={req.id} className="card flex flex-col justify-between">
                   <div>
@@ -614,7 +614,7 @@ export default function DashboardPage() {
 
         {/* Tab 3: Matches / Requests */}
         {activeTab === 'matches' && (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 2xl:gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {userMatches.map(match => (
               <div key={match.id} className="card flex flex-col justify-between">
                 <div>
@@ -700,7 +700,7 @@ export default function DashboardPage() {
 
         {/* Tab 6: New Request (For Clients) */}
         {activeTab === 'request' && !isNurse && (
-          <div className="max-w-2xl mx-auto card p-6 sm:p-8">
+          <div className="max-w-2xl xl:max-w-3xl 2xl:max-w-4xl mx-auto card p-6 sm:p-8 2xl:p-10">
             <h3 className="text-lg font-bold mb-4">Post a New Care Request</h3>
             <form onSubmit={handleCreateRequest} className="space-y-4">
               <div>

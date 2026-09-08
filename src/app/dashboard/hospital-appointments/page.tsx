@@ -86,7 +86,7 @@ export default function HospitalAppointmentsPage() {
     <div className="min-h-screen bg-slate-50 dark:bg-dark-bg transition-colors duration-500">
       {/* Header */}
       <header className="bg-white/80 dark:bg-dark-surface/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 shadow-soft-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl 2xl:max-w-[1680px] 3xl:max-w-[1920px] 4xl:max-w-[2200px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
           <div className="flex justify-between items-center h-20">
             <div className="flex items-center space-x-4">
               <Link 
@@ -106,7 +106,7 @@ export default function HospitalAppointmentsPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl 2xl:max-w-[1680px] 3xl:max-w-[1920px] 4xl:max-w-[2200px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8">
         {/* Search and Filters */}
         <div className="card mb-8">
           <div className="flex flex-col lg:flex-row gap-6">
@@ -140,13 +140,13 @@ export default function HospitalAppointmentsPage() {
 
         {/* Doctors Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 xl:gap-8">
             {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className="card animate-pulse h-80 bg-slate-200/50 dark:bg-slate-800/50 border-none"></div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 xl:gap-8 pb-32">
             {filteredDoctors.map(doctor => (
               <DoctorCard 
                 key={doctor.id} 

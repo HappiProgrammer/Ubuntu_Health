@@ -228,7 +228,7 @@ export default function AdminNurseApplications() {
     <div className="min-h-screen bg-[#FFF2E1]">
       {/* Header */}
       <div className="bg-white border-b border-[#E8DCC8] sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl 2xl:max-w-[1680px] 3xl:max-w-[1920px] 4xl:max-w-[2200px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-6">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-[#5C4B37]">Nurse Applications</h1>
@@ -242,7 +242,7 @@ export default function AdminNurseApplications() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl 2xl:max-w-[1680px] 3xl:max-w-[1920px] 4xl:max-w-[2200px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 py-8">
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4 mb-6">
           <div className="bg-white rounded-md border border-[#E8DCC8] p-4">

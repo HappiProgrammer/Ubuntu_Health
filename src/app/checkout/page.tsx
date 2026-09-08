@@ -95,7 +95,7 @@ function CheckoutContent() {
       
       {/* Top Navbar */}
       <header className="border-b border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur sticky top-0 z-30">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1680px] items-center justify-between px-4 py-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
           <Link href="/" className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-primary-600 transition">
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Home</span>
@@ -115,7 +115,7 @@ function CheckoutContent() {
       </header>
 
       {/* Main Container */}
-      <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:py-12">
+      <main className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl 3xl:max-w-[1680px] px-4 py-8 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 lg:py-12">
         
         {completedReceipt ? (
           /* SUCCESS STATE AFTER PAYMENT */
@@ -168,7 +168,7 @@ function CheckoutContent() {
           </div>
         ) : (
           /* CHECKOUT FORM */
-          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] 2xl:grid-cols-[1.25fr_0.75fr] 2xl:gap-12">
             
             {/* Left Column: Patient & Location Details */}
             <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-soft">

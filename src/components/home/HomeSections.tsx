@@ -38,18 +38,18 @@ const featureIcons = [ShieldCheck, MapPinned, MessageSquareHeart, HeartHandshake
 
 export function HomeMetrics({ metrics }: { metrics: HomeCopy['metrics'] }) {
   return (
-    <section className="px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
+    <section className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto grid max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px] gap-6 2xl:gap-8 md:grid-cols-3">
         {metrics.map((metric) => (
           <div
             key={metric.label}
-            className="group rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-6 sm:p-8 shadow-soft-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-primary-500/60 hover:scale-[1.02] cursor-pointer"
+            className="group rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-6 sm:p-8 2xl:p-10 shadow-soft-sm backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:border-primary-500/60 hover:scale-[1.02] cursor-pointer"
           >
-            <p className="font-display text-4xl sm:text-5xl font-black text-slate-950 dark:text-white tracking-tight mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+            <p className="font-display text-4xl sm:text-5xl 2xl:text-6xl font-black text-slate-950 dark:text-white tracking-tight mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
               {metric.value}
             </p>
-            <p className="text-base font-bold text-slate-900 dark:text-white mb-1">{metric.label}</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{metric.subtext}</p>
+            <p className="text-base 2xl:text-lg font-bold text-slate-900 dark:text-white mb-1">{metric.label}</p>
+            <p className="text-xs 2xl:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{metric.subtext}</p>
           </div>
         ))}
       </div>
@@ -59,8 +59,8 @@ export function HomeMetrics({ metrics }: { metrics: HomeCopy['metrics'] }) {
 
 export function HomeServicesSection({ content }: { content: HomeCopy['servicesSection'] }) {
   return (
-    <section id="services" className="px-4 py-16 sm:px-6 lg:px-8 scroll-mt-20">
-      <div className="mx-auto max-w-6xl">
+    <section id="services" className="w-full px-4 py-16 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 scroll-mt-20">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px]">
         <div className="mb-10 text-center md:text-left">
           <p className="section-kicker">Tailored Care</p>
           <h2 className="section-title">{content.title}</h2>
@@ -68,7 +68,7 @@ export function HomeServicesSection({ content }: { content: HomeCopy['servicesSe
         </div>
 
         {/* Responsive Grid with Active Floating Divs (No Emojis, Clean SVG Icons) */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 2xl:gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {content.services.map((service) => {
             const Icon = serviceIconMap[service.id] || Stethoscope
             const gradient = serviceColorMap[service.id] || 'from-primary-600 to-cyan-500'
@@ -126,15 +126,15 @@ export function HomeServicesSection({ content }: { content: HomeCopy['servicesSe
 
 export function HomeHowItWorks({ content }: { content: HomeCopy['howItWorks'] }) {
   return (
-    <section id="how-it-works" className="px-4 py-16 sm:px-6 lg:px-8 scroll-mt-20">
-      <div className="mx-auto max-w-6xl">
+    <section id="how-it-works" className="w-full px-4 py-16 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 scroll-mt-20">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px]">
         <div className="mb-10 text-center md:text-left">
           <p className="section-kicker">Simple Steps</p>
           <h2 className="section-title">{content.title}</h2>
           <p className="section-copy">{content.subtitle}</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 2xl:gap-8 md:grid-cols-3">
           {content.steps.map((step, idx) => (
             <div
               key={step.title}
@@ -155,16 +155,16 @@ export function HomeHowItWorks({ content }: { content: HomeCopy['howItWorks'] })
 
 export function HomeDiasporaSection({ content }: { content: HomeCopy['diasporaSection'] }) {
   return (
-    <section className="px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl rounded-3xl border border-cyan-500/30 bg-gradient-to-r from-cyan-600 via-sky-600 to-primary-600 p-8 sm:p-12 text-white shadow-soft transition-all duration-300 hover:shadow-xl">
-        <div className="max-w-2xl space-y-4">
+    <section className="w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px] rounded-3xl border border-cyan-500/30 bg-gradient-to-r from-cyan-600 via-sky-600 to-primary-600 p-8 sm:p-12 2xl:p-16 text-white shadow-soft transition-all duration-300 hover:shadow-xl">
+        <div className="max-w-3xl 2xl:max-w-4xl space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3.5 py-1 text-xs font-bold">
             <Globe2 className="h-3.5 w-3.5" />
             <span>{content.badge}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold">{content.title}</h2>
-          <p className="text-sm leading-relaxed text-cyan-100">{content.description}</p>
-          <ul className="space-y-2 text-xs text-cyan-50 pt-2">
+          <h2 className="text-2xl sm:text-3xl 2xl:text-4xl font-extrabold">{content.title}</h2>
+          <p className="text-sm 2xl:text-base leading-relaxed text-cyan-100">{content.description}</p>
+          <ul className="space-y-2 text-xs 2xl:text-sm text-cyan-50 pt-2">
             {content.benefits.map((b) => (
               <li key={b} className="flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-300 shrink-0" />
@@ -197,15 +197,15 @@ export function HomeDiasporaSection({ content }: { content: HomeCopy['diasporaSe
 
 export function HomeFeatures({ content }: { content: HomeCopy['features'] }) {
   return (
-    <section id="safety" className="px-4 py-16 sm:px-6 lg:px-8 scroll-mt-20">
-      <div className="mx-auto max-w-6xl">
+    <section id="safety" className="w-full px-4 py-16 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 scroll-mt-20">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px]">
         <div className="mb-10 text-center md:text-left">
           <p className="section-kicker">Trust & Standards</p>
           <h2 className="section-title">{content.title}</h2>
           <p className="section-copy">{content.subtitle}</p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 2xl:gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {content.items.map((feature, idx) => {
             const Icon = featureIcons[idx % featureIcons.length]
             return (
@@ -231,13 +231,13 @@ export function HomeFeatures({ content }: { content: HomeCopy['features'] }) {
 
 export function HomeTrustSafety({ content }: { content: HomeCopy['trustSafety'] }) {
   return (
-    <section className="px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-8 sm:p-10 shadow-soft-sm transition-all duration-300 hover:shadow-md">
+    <section className="w-full px-4 py-12 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px] rounded-3xl border border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 p-8 sm:p-10 2xl:p-14 shadow-soft-sm transition-all duration-300 hover:shadow-md">
         <div className="mb-8">
-          <h2 className="text-2xl font-extrabold text-slate-950 dark:text-white mb-2">{content.title}</h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400">{content.subtitle}</p>
+          <h2 className="text-2xl 2xl:text-3xl font-extrabold text-slate-950 dark:text-white mb-2">{content.title}</h2>
+          <p className="text-sm 2xl:text-base text-slate-600 dark:text-slate-400">{content.subtitle}</p>
         </div>
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 2xl:gap-8 md:grid-cols-3">
           {content.points.map((pt) => (
             <div key={pt.title} className="space-y-1.5">
               <div className="flex items-center gap-2">
@@ -257,15 +257,15 @@ export function HomeFAQ({ content }: { content: HomeCopy['faq'] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <section id="faq" className="px-4 py-16 sm:px-6 lg:px-8 scroll-mt-20">
-      <div className="mx-auto max-w-4xl">
+    <section id="faq" className="w-full px-4 py-16 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 scroll-mt-20">
+      <div className="mx-auto max-w-4xl xl:max-w-5xl 2xl:max-w-6xl 3xl:max-w-[1400px]">
         <div className="mb-10 text-center">
           <p className="section-kicker">Answers</p>
           <h2 className="section-title">{content.title}</h2>
           <p className="section-copy mx-auto">{content.subtitle}</p>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 2xl:space-y-4">
           {content.items.map((item, index) => {
             const isOpen = openIndex === index
             return (
@@ -275,13 +275,13 @@ export function HomeFAQ({ content }: { content: HomeCopy['faq'] }) {
               >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="flex w-full items-center justify-between p-5 text-left font-bold text-slate-900 dark:text-white hover:text-primary-600 transition text-sm sm:text-base"
+                  className="flex w-full items-center justify-between p-5 2xl:p-6 text-left font-bold text-slate-900 dark:text-white hover:text-primary-600 transition text-sm sm:text-base 2xl:text-lg"
                 >
                   <span>{item.question}</span>
                   <ChevronDown className={`h-5 w-5 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-primary-600' : 'text-slate-400'}`} />
                 </button>
                 {isOpen && (
-                  <div className="border-t border-slate-100 dark:border-slate-800 px-5 pb-5 pt-3 text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                  <div className="border-t border-slate-100 dark:border-slate-800 px-5 2xl:px-6 pb-5 2xl:pb-6 pt-3 text-xs sm:text-sm 2xl:text-base leading-relaxed text-slate-600 dark:text-slate-300">
                     {item.answer}
                   </div>
                 )}
@@ -296,15 +296,15 @@ export function HomeFAQ({ content }: { content: HomeCopy['faq'] }) {
 
 export function HomeTestimonials({ content }: { content: HomeCopy['testimonials'] }) {
   return (
-    <section className="px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
+    <section className="w-full px-4 py-16 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px]">
         <div className="mb-10 text-center md:text-left">
           <p className="section-kicker">Community Stories</p>
           <h2 className="section-title">{content.title}</h2>
           <p className="section-copy">{content.subtitle}</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 2xl:gap-8 md:grid-cols-3">
           {content.items.map((item) => (
             <div
               key={item.name}
@@ -316,13 +316,13 @@ export function HomeTestimonials({ content }: { content: HomeCopy['testimonials'
                     <Star key={i} className="h-4 w-4 fill-current" />
                   ))}
                 </div>
-                <p className="text-xs italic leading-relaxed text-slate-700 dark:text-slate-300">
+                <p className="text-xs 2xl:text-sm italic leading-relaxed text-slate-700 dark:text-slate-300">
                   &ldquo;{item.quote}&rdquo;
                 </p>
               </div>
               <div className="mt-6 border-t border-slate-100 dark:border-slate-800 pt-4">
-                <p className="font-bold text-slate-900 dark:text-white text-sm">{item.name}</p>
-                <p className="text-[11px] text-slate-500">{item.role} • {item.location}</p>
+                <p className="font-bold text-slate-900 dark:text-white text-sm 2xl:text-base">{item.name}</p>
+                <p className="text-[11px] 2xl:text-xs text-slate-500">{item.role} • {item.location}</p>
               </div>
             </div>
           ))}
@@ -334,10 +334,10 @@ export function HomeTestimonials({ content }: { content: HomeCopy['testimonials'
 
 export function HomeCta({ content }: { content: HomeCopy['cta'] }) {
   return (
-    <section className="px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-5xl rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-8 sm:p-14 text-center text-white shadow-soft transition-all duration-300 hover:shadow-xl">
-        <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">{content.title}</h2>
-        <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-300 mb-8 leading-relaxed">
+    <section className="w-full px-4 py-16 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-[1500px] 3xl:max-w-[1700px] rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-8 sm:p-14 2xl:p-20 text-center text-white shadow-soft transition-all duration-300 hover:shadow-xl">
+        <h2 className="text-3xl sm:text-4xl 2xl:text-5xl font-extrabold mb-4">{content.title}</h2>
+        <p className="max-w-2xl 2xl:max-w-3xl mx-auto text-sm sm:text-base 2xl:text-lg text-slate-300 mb-8 leading-relaxed">
           {content.description}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

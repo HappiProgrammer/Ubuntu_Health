@@ -67,7 +67,7 @@ export default function FeatureDetailPage() {
       
       {/* Top Navbar */}
       <header className="sticky top-0 z-40 border-b border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
+        <div className="mx-auto flex max-w-6xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px] items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8 xl:px-10">
           <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 transition">
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Home</span>
@@ -93,10 +93,10 @@ export default function FeatureDetailPage() {
       </header>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:py-16 space-y-16 flex-1 w-full">
+      <main className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-[1500px] 3xl:max-w-[1700px] px-4 py-10 sm:px-6 lg:px-8 xl:px-10 lg:py-16 space-y-16 flex-1 w-full">
         
         {/* Hero Banner */}
-        <div className="text-center space-y-6 max-w-3xl mx-auto">
+        <div className="text-center space-y-6 max-w-3xl 2xl:max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-50/80 dark:bg-cyan-950/40 px-4 py-1.5 text-xs font-extrabold uppercase tracking-widest text-cyan-800 dark:text-cyan-300 shadow-xs">
             <span className="text-base">{data.icon}</span>
             <span>{data.eyebrow}</span>
@@ -229,8 +229,8 @@ export default function FeatureDetailPage() {
         )}
 
         {/* CTA Card */}
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-950 via-primary-950 to-slate-900 p-8 sm:p-12 text-white shadow-soft-lg text-center space-y-6">
-          <div className="relative z-10 max-w-2xl mx-auto space-y-4">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-950 via-primary-950 to-slate-900 p-8 sm:p-12 2xl:p-16 text-white shadow-soft-lg text-center space-y-6">
+          <div className="relative z-10 max-w-2xl 2xl:max-w-3xl mx-auto space-y-4">
             <h3 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
               {data.ctaTitle}
             </h3>

@@ -45,8 +45,8 @@ export function HomeHero({
     : `/checkout?service=senior&city=${selectedCity}&urgency=${selectedDuration}`
 
   return (
-    <section className="relative overflow-hidden px-4 pb-16 pt-3 sm:px-6 lg:px-8 lg:pb-24">
-      <div className="mx-auto max-w-7xl">
+    <section className="relative overflow-hidden w-full px-4 pb-16 pt-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 lg:pb-24">
+      <div className="mx-auto max-w-7xl 2xl:max-w-[1600px] 3xl:max-w-[1800px] 4xl:max-w-[2100px] w-full">
         {/* Navigation Bar */}
         <header className="glass-panel sticky top-3 z-40 mb-8 flex items-center justify-between gap-4 px-5 py-4 backdrop-blur-xl shadow-soft-sm border-white/80 dark:border-white/10">
           <Link href="/" className="flex items-center gap-3">
@@ -157,24 +157,24 @@ export function HomeHero({
         )}
 
         {/* Hero Main Content */}
-        <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-          <div className="space-y-6">
-            <div className="space-y-4">
+        <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] 2xl:gap-16 3xl:gap-20 lg:items-center">
+          <div className="space-y-6 2xl:space-y-8">
+            <div className="space-y-4 2xl:space-y-6">
               <p className="font-display text-xs font-bold uppercase tracking-[0.25em] text-primary-600 dark:text-primary-400">
                 {content.hero.eyebrow}
               </p>
               
-              <h1 className="max-w-2xl font-display text-4xl font-black leading-tight text-slate-950 dark:text-white sm:text-5xl lg:text-6xl">
+              <h1 className="max-w-2xl 2xl:max-w-3xl 3xl:max-w-4xl font-display text-4xl font-black leading-tight text-slate-950 dark:text-white sm:text-5xl lg:text-6xl 2xl:text-7xl">
                 {content.hero.title}
               </h1>
 
-              <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600 dark:text-slate-300">
+              <p className="max-w-2xl 2xl:max-w-3xl 3xl:max-w-4xl text-base sm:text-lg 2xl:text-xl leading-relaxed text-slate-600 dark:text-slate-300">
                 {content.hero.subtitle}
               </p>
             </div>
 
             {/* Role Selection Cards */}
-            <div className="grid gap-3 sm:max-w-xl sm:grid-cols-2">
+            <div className="grid gap-3 sm:max-w-xl 2xl:max-w-2xl sm:grid-cols-2">
               <button
                 type="button"
                 onClick={() => onSelectRole('client')}
@@ -238,7 +238,7 @@ export function HomeHero({
           </div>
 
           {/* Right Column: Direct & Streamlined Care Booking Card */}
-          <div className="glass-panel p-6 sm:p-8 space-y-6">
+          <div className="glass-panel p-6 sm:p-8 2xl:p-10 space-y-6 2xl:space-y-8 w-full max-w-xl lg:max-w-none ml-auto">
             {/* Step 1: Select City */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-3 flex items-center gap-1.5">
