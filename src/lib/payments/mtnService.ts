@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { InitiatePaymentRequest, TransactionRecord } from './types';
 import { cleanPhoneForApi } from './helpers';
 import { transactionStorage } from './storage';
+import { MERCHANT_ACCOUNT } from './config';
 
 export class MTNMoMoService {
   private environment: string;
@@ -68,6 +69,7 @@ export class MTNMoMoService {
 
   /**
    * Request To Pay (Pushes USSD PIN prompt to customer phone)
+   * Linked receiving account: 671 159 461
    */
   async requestToPay(request: InitiatePaymentRequest): Promise<TransactionRecord> {
     const referenceId = crypto.randomUUID();
@@ -82,10 +84,12 @@ export class MTNMoMoService {
       amount: request.amount,
       currency: request.currency || 'XAF',
       phoneNumber: request.phoneNumber,
+      receiverPhone: MERCHANT_ACCOUNT.phone, // 671 159 461
       payerName: request.payerName || 'Patient / Client',
       payerEmail: request.payerEmail,
-      description: request.description || 'CAMIHN Healthcare Care Consultation',
+      description: request.description || 'BridgeCare Santé Care Consultation',
       serviceType: request.serviceType,
+      validatedBySender: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       metadata: request.metadata
@@ -102,14 +106,14 @@ export class MTNMoMoService {
 
         const payload = {
           amount: request.amount.toString(),
-          currency: this.environment === 'production' ? 'XAF' : 'EUR', // Sandbox expects EUR or configured currency
+          currency: this.environment === 'production' ? 'XAF' : 'EUR',
           externalId: transactionId,
           payer: {
             partyIdType: 'MSISDN',
             partyId: targetPhone
           },
           payerMessage: request.description.substring(0, 50),
-          payeeNote: 'CAMIHN Healthcare'
+          payeeNote: `Payment to ${MERCHANT_ACCOUNT.phone} (BridgeCare Cameroon Santé)`
         };
 
         const res = await fetch(`${this.baseUrl}/collection/v1_0/requesttopay`, {
@@ -132,7 +136,6 @@ export class MTNMoMoService {
         }
       } catch (err: any) {
         console.error('MTN RequestToPay network error:', err);
-        // We still keep the transaction saved
       }
     }
 
@@ -141,6 +144,7 @@ export class MTNMoMoService {
 
   /**
    * Check status of Request to Pay
+   * Does NOT auto-confirm without sender validation or live API confirmation
    */
   async checkStatus(referenceId: string): Promise<{ status: TransactionRecord['status']; financialId?: string; reason?: string }> {
     const txn = transactionStorage.getByReferenceId(referenceId);
@@ -184,16 +188,7 @@ export class MTNMoMoService {
       }
     }
 
-    // Auto-resolve simulation for testing when elapsed time > 5 seconds
-    const elapsed = Date.now() - new Date(txn.createdAt).getTime();
-    if (elapsed > 6000 && txn.status === 'pending') {
-      // In development/demo mode without live webhook, confirm transaction
-      transactionStorage.updateStatus(txn.id, 'successful', {
-        financialTransactionId: `MTN-FIN-${Math.floor(100000000 + Math.random() * 900000000)}`
-      });
-      return { status: 'successful', financialId: `MTN-FIN-${Date.now()}` };
-    }
-
+    // Status stays pending until sender validates or carrier callback arrives
     return { status: txn.status };
   }
 }

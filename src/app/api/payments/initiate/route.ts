@@ -5,6 +5,7 @@ import { mtnMoMoService } from '@/lib/payments/mtnService';
 import { orangeMoneyService } from '@/lib/payments/orangeService';
 import { validateCameroonPhone, detectCarrier } from '@/lib/payments/helpers';
 import { InitiatePaymentRequest } from '@/lib/payments/types';
+import { MERCHANT_ACCOUNT } from '@/lib/payments/config';
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,7 +31,8 @@ export async function POST(req: NextRequest) {
     if (provider === 'mtn') {
       const transaction = await mtnMoMoService.requestToPay({
         ...body,
-        provider: 'mtn'
+        provider: 'mtn',
+        receiverPhone: MERCHANT_ACCOUNT.phone
       });
 
       return NextResponse.json({
@@ -42,14 +44,16 @@ export async function POST(req: NextRequest) {
         amount: transaction.amount,
         currency: transaction.currency,
         phoneNumber: transaction.phoneNumber,
+        receiverPhone: MERCHANT_ACCOUNT.phone,
         description: transaction.description,
         ussdPromptSent: true,
-        message: 'A payment prompt has been sent to your MTN phone. Please check your screen and enter your MoMo PIN to confirm.'
+        message: `A payment prompt has been sent to your MTN phone. Please approve payment to ${MERCHANT_ACCOUNT.phone} by entering your MoMo PIN.`
       });
     } else {
       const { transaction, paymentUrl } = await orangeMoneyService.initiatePayment({
         ...body,
-        provider: 'orange'
+        provider: 'orange',
+        receiverPhone: MERCHANT_ACCOUNT.phone
       });
 
       return NextResponse.json({
@@ -61,12 +65,13 @@ export async function POST(req: NextRequest) {
         amount: transaction.amount,
         currency: transaction.currency,
         phoneNumber: transaction.phoneNumber,
+        receiverPhone: MERCHANT_ACCOUNT.phone,
         description: transaction.description,
         paymentUrl,
         ussdPromptSent: true,
         message: paymentUrl 
           ? 'Orange Money payment session created. Redirecting to payment authorization...'
-          : 'An Orange Money payment prompt has been sent to your phone. Enter your secret code #150# or approve the notification.'
+          : `An Orange Money payment prompt has been sent to your phone. Approve transfer to ${MERCHANT_ACCOUNT.phone} via #150#.`
       });
     }
   } catch (error: any) {

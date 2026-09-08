@@ -106,6 +106,13 @@ export function ReceiptModal({ isOpen, onClose, receipt }: ReceiptModalProps) {
             </div>
 
             <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
+              <span className="text-slate-500 dark:text-slate-400">Paid To (Merchant Account):</span>
+              <span className="font-mono font-bold text-amber-600 dark:text-amber-400">
+                {receipt.receiverPhone || '671 159 461'}
+              </span>
+            </div>
+
+            <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
               <span className="text-slate-500 dark:text-slate-400">Date & Time:</span>
               <span className="font-semibold text-slate-900 dark:text-slate-100">
                 {new Date(receipt.paidAt).toLocaleString('en-GB', {

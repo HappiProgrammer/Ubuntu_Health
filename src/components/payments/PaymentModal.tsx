@@ -12,10 +12,13 @@ import {
   Loader2, 
   Sparkles,
   PhoneCall,
-  Lock
+  Lock,
+  ArrowDownRight,
+  Receipt
 } from 'lucide-react'
 import { PaymentProvider, PaymentReceipt } from '@/lib/payments/types'
 import { detectCarrier, formatCameroonPhone, validateCameroonPhone, formatXAF } from '@/lib/payments/helpers'
+import { MERCHANT_ACCOUNT } from '@/lib/payments/config'
 import { ReceiptModal } from './ReceiptModal'
 
 interface PaymentModalProps {
@@ -45,8 +48,11 @@ export function PaymentModal({
   const [email, setEmail] = useState('')
   const [step, setStep] = useState<'input' | 'processing' | 'waiting_pin' | 'success' | 'failed'>('input')
   const [errorMessage, setErrorMessage] = useState('')
+  const [validationError, setValidationError] = useState('')
   const [transactionId, setTransactionId] = useState<string>('')
-  const [countdown, setCountdown] = useState<number>(60)
+  const [countdown, setCountdown] = useState<number>(120)
+  const [validationCode, setValidationCode] = useState<string>('')
+  const [isValidating, setIsValidating] = useState<boolean>(false)
   const [receipt, setReceipt] = useState<PaymentReceipt | null>(null)
   const [showReceiptModal, setShowReceiptModal] = useState<boolean>(false)
 
@@ -75,6 +81,7 @@ export function PaymentModal({
   const handleStartPayment = async (e: React.FormEvent) => {
     e.preventDefault()
     setErrorMessage('')
+    setValidationError('')
 
     if (!validateCameroonPhone(phone)) {
       setErrorMessage('Please enter a valid 9-digit Cameroon phone number (e.g. 677 123 456 or 699 123 456)')
@@ -98,6 +105,7 @@ export function PaymentModal({
           amount,
           currency: 'XAF',
           phoneNumber: formattedPhone,
+          receiverPhone: MERCHANT_ACCOUNT.phone,
           payerName: name || 'Valued Patient',
           payerEmail: email || undefined,
           description,
@@ -115,9 +123,9 @@ export function PaymentModal({
 
       setTransactionId(data.transactionId)
       setStep('waiting_pin')
-      setCountdown(60)
+      setCountdown(120)
 
-      // Start countdown
+      // Start countdown timer for user guidance
       if (countdownRef.current) clearInterval(countdownRef.current)
       countdownRef.current = setInterval(() => {
         setCountdown((prev) => {
@@ -129,7 +137,7 @@ export function PaymentModal({
         })
       }, 1000)
 
-      // Start live status polling
+      // Polling checks status, but strictly waits for validation
       startPolling(data.transactionId)
     } catch (err: any) {
       console.error(err)
@@ -148,6 +156,7 @@ export function PaymentModal({
         const res = await fetch(`/api/payments/status?id=${txnId}`)
         const data = await res.json()
 
+        // Only transition if backend confirms transaction is successful (after validation or live callback)
         if (data.success && data.status === 'successful') {
           if (pollingRef.current) clearInterval(pollingRef.current)
           if (countdownRef.current) clearInterval(countdownRef.current)
@@ -167,15 +176,54 @@ export function PaymentModal({
         console.error('Polling error:', err)
       }
 
-      if (attempts >= 30) {
+      if (attempts >= 40) {
         if (pollingRef.current) clearInterval(pollingRef.current)
       }
-    }, 2500)
+    }, 3000)
+  }
+
+  // Mandatory sender payment validation before success popup
+  const handleValidatePayment = async () => {
+    setValidationError('')
+    setIsValidating(true)
+
+    try {
+      const res = await fetch('/api/payments/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          transactionId,
+          validationCode: validationCode.trim() || undefined
+        })
+      })
+
+      const data = await res.json()
+
+      if (data.success && data.status === 'successful') {
+        if (pollingRef.current) clearInterval(pollingRef.current)
+        if (countdownRef.current) clearInterval(countdownRef.current)
+
+        setReceipt(data.receipt)
+        setStep('success')
+        if (onSuccess && data.receipt) {
+          onSuccess(data.receipt)
+        }
+      } else {
+        setValidationError(data.message || 'Payment not yet confirmed on your phone. Please approve the prompt and try again.')
+      }
+    } catch (err: any) {
+      console.error('Validation error:', err)
+      setValidationError('Network error validating payment. Please check your connection and try again.')
+    } finally {
+      setIsValidating(false)
+    }
   }
 
   const handleRetry = () => {
     setStep('input')
     setErrorMessage('')
+    setValidationError('')
+    setValidationCode('')
   }
 
   return (
@@ -208,6 +256,31 @@ export function PaymentModal({
             {step === 'input' && (
               <form onSubmit={handleStartPayment} className="space-y-5">
                 
+                {/* Official Linked Merchant Account Badge */}
+                <div className="rounded-2xl bg-gradient-to-r from-amber-500/10 via-primary-500/10 to-emerald-500/10 dark:from-amber-950/20 dark:to-emerald-950/20 p-3.5 border border-amber-500/30 dark:border-amber-400/20 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black text-xs shadow-sm">
+                      MoMo
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 dark:text-amber-300 flex items-center gap-1">
+                        <ShieldCheck className="h-3 w-3" /> Linked Receiving Account
+                      </span>
+                      <p className="text-sm font-black text-slate-950 dark:text-white font-mono tracking-wide">
+                        {MERCHANT_ACCOUNT.phone}
+                      </p>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                        {MERCHANT_ACCOUNT.businessName}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="inline-block rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 px-2 py-0.5 text-[10px] font-black text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                      Verified Payee
+                    </span>
+                  </div>
+                </div>
+
                 {/* Order Summary */}
                 <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/60 p-4 border border-slate-200/70 dark:border-slate-700/60">
                   <div className="flex justify-between items-center text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
@@ -268,10 +341,10 @@ export function PaymentModal({
                   </div>
                 </div>
 
-                {/* Phone Input */}
+                {/* Sender Phone Input */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-                    {provider === 'mtn' ? 'MTN MoMo Phone Number' : 'Orange Money Phone Number'}
+                    Your {provider === 'mtn' ? 'MTN MoMo' : 'Orange Money'} Phone Number
                   </label>
                   <div className="relative">
                     <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
@@ -287,20 +360,20 @@ export function PaymentModal({
                     />
                   </div>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
-                    A secure push prompt will appear on this phone to enter your PIN.
+                    A secure push prompt will be sent to this phone to transfer to <strong>{MERCHANT_ACCOUNT.phone}</strong>.
                   </p>
                 </div>
 
                 {/* Payer Name (Optional) */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
-                    Your Name (for Receipt)
+                    Your Full Name (for Official Receipt)
                   </label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Marie Claire"
+                    placeholder="e.g. Jean-Paul Mbarga"
                     className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-2.5 text-sm font-semibold text-slate-900 dark:text-white focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
                   />
                 </div>
@@ -322,13 +395,13 @@ export function PaymentModal({
                   }`}
                 >
                   <Lock className="h-4 w-4" />
-                  <span>Pay {formatXAF(amount)} via {provider === 'mtn' ? 'MTN MoMo' : 'Orange Money'}</span>
+                  <span>Send {formatXAF(amount)} to {MERCHANT_ACCOUNT.phone}</span>
                   <ArrowRight className="h-4 w-4" />
                 </button>
 
                 <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
                   <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-                  <span>256-Bit Bank-Grade Encrypted Cameroon Mobile Payment</span>
+                  <span>Direct Encrypted Mobile Money Escrow Transfer</span>
                 </div>
               </form>
             )}
@@ -339,52 +412,115 @@ export function PaymentModal({
                 <Loader2 className="h-12 w-12 text-primary-600 animate-spin mx-auto" />
                 <h4 className="text-lg font-bold text-slate-900 dark:text-white">Connecting to {provider.toUpperCase()} Gateway...</h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
-                  Generating secure transaction token and sending push authorization request to your phone.
+                  Initiating payment request from <strong>{phone}</strong> to merchant <strong>{MERCHANT_ACCOUNT.phone}</strong>.
                 </p>
               </div>
             )}
 
-            {/* STEP 3: WAITING FOR PIN (USSD PROMPT SENT) */}
+            {/* STEP 3: WAITING FOR PIN & MANDATORY SENDER VALIDATION */}
             {step === 'waiting_pin' && (
-              <div className="py-6 text-center space-y-6 animate-fade-in">
-                <div className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-primary-50 dark:bg-slate-800 border-2 border-primary-500 shadow-soft-lg">
-                  <Smartphone className="h-10 w-10 text-primary-600 dark:text-primary-400 animate-bounce" />
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4">
+              <div className="py-4 text-center space-y-5 animate-fade-in">
+                <div className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-50 dark:bg-slate-800 border-2 border-primary-500 shadow-soft">
+                  <Smartphone className="h-8 w-8 text-primary-600 dark:text-primary-400 animate-bounce" />
+                  <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500"></span>
+                    <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
                   </span>
                 </div>
 
-                <div className="space-y-2">
-                  <h4 className="text-xl font-extrabold text-slate-900 dark:text-white">
-                    Check Your Phone Screen Now!
+                <div className="space-y-1">
+                  <h4 className="text-lg font-extrabold text-slate-900 dark:text-white">
+                    Approve Prompt on Your Phone
                   </h4>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-sm mx-auto leading-relaxed">
-                    A payment prompt of <strong className="text-primary-600 dark:text-primary-400">{formatXAF(amount)}</strong> has been pushed to <strong className="font-mono">{phone}</strong>.
+                  <p className="text-xs text-slate-600 dark:text-slate-300 max-w-sm mx-auto">
+                    A push authorization request for <strong className="text-primary-600 dark:text-primary-400">{formatXAF(amount)}</strong> has been sent to <strong className="font-mono">{phone}</strong>.
                   </p>
                 </div>
 
-                {/* Visual Instructions */}
+                {/* Transfer Route Overview */}
+                <div className="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-3 text-xs border border-slate-200 dark:border-slate-700/60 flex items-center justify-between font-mono">
+                  <div className="text-left">
+                    <span className="text-[10px] text-slate-400 uppercase font-sans font-bold">From (Sender):</span>
+                    <p className="font-bold text-slate-800 dark:text-slate-200">{phone}</p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-slate-400 mx-2" />
+                  <div className="text-right">
+                    <span className="text-[10px] text-amber-600 dark:text-amber-400 uppercase font-sans font-bold">To (Merchant):</span>
+                    <p className="font-bold text-amber-600 dark:text-amber-400">{MERCHANT_ACCOUNT.phone}</p>
+                  </div>
+                </div>
+
+                {/* Visual USSD Instructions */}
                 <div className="rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 p-4 text-left space-y-2">
-                  <p className="text-xs font-bold text-amber-900 dark:text-amber-300">
-                    {provider === 'mtn' ? 'MTN MoMo Instructions:' : 'Orange Money Instructions:'}
+                  <p className="text-xs font-bold text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
+                    <span>{provider === 'mtn' ? 'MTN MoMo Confirmation:' : 'Orange Money Confirmation:'}</span>
                   </p>
                   <ol className="list-decimal list-inside text-xs text-amber-800 dark:text-amber-400 space-y-1">
-                    <li>Look at your phone popup or dial <strong>{provider === 'mtn' ? '*126#' : '#150#'}</strong></li>
-                    <li>Enter your secret <strong>Mobile Money PIN</strong> to authorize</li>
-                    <li>This window will automatically refresh once approved!</li>
+                    <li>Approve popup or dial <strong>{provider === 'mtn' ? '*126#' : '#150*50#'}</strong> on your phone</li>
+                    <li>Enter your secret <strong>PIN</strong> to authorize transfer to <strong>{MERCHANT_ACCOUNT.phone}</strong></li>
+                    <li>Then click <strong>&quot;Validate Payment&quot;</strong> below to confirm</li>
                   </ol>
                 </div>
 
-                {/* Timer & Polling indicator */}
-                <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
-                  <Clock className="h-4 w-4 animate-spin" />
-                  <span>Awaiting PIN confirmation... ({countdown}s)</span>
+                {/* MANDATORY VALIDATION FORM */}
+                <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/90 border-2 border-primary-500/40 p-4 text-left space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1">
+                      <Lock className="h-3.5 w-3.5 text-primary-500" />
+                      <span>Step 2: Validate Payment</span>
+                    </label>
+                    <span className="text-[10px] text-slate-400 font-mono">ID: {transactionId.substring(0, 12)}...</span>
+                  </div>
+
+                  <div>
+                    <input
+                      type="text"
+                      value={validationCode}
+                      onChange={(e) => setValidationCode(e.target.value)}
+                      placeholder="Carrier Txn Reference or Authorization Code (Optional)"
+                      className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3.5 py-2.5 text-xs font-mono font-bold text-slate-900 dark:text-white focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                    />
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
+                      Once you enter your PIN on your phone, click below to validate. Success message will only show after validation.
+                    </p>
+                  </div>
+
+                  {validationError && (
+                    <div className="flex items-center gap-2 rounded-xl bg-red-50 dark:bg-red-950/40 p-2.5 text-xs font-medium text-red-700 dark:text-red-300 border border-red-200 dark:border-red-900">
+                      <AlertCircle className="h-4 w-4 shrink-0" />
+                      <span>{validationError}</span>
+                    </div>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={handleValidatePayment}
+                    disabled={isValidating}
+                    className="w-full rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 py-3.5 px-4 text-xs font-black text-white shadow-soft flex items-center justify-center gap-2 transition disabled:opacity-50"
+                  >
+                    {isValidating ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Validating Transfer to {MERCHANT_ACCOUNT.phone}...</span>
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="h-4 w-4" />
+                        <span>I Have Approved on Phone — Validate Now</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Countdown display */}
+                <div className="flex items-center justify-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 pt-1">
+                  <Clock className="h-3.5 w-3.5 animate-spin" />
+                  <span>Session valid for {countdown} seconds</span>
                 </div>
               </div>
             )}
 
-            {/* STEP 4: SUCCESS */}
+            {/* STEP 4: SUCCESS (ONLY AFTER VALIDATION) */}
             {step === 'success' && (
               <div className="py-6 text-center space-y-6 animate-fade-in">
                 <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-100 dark:bg-emerald-950/60 border-2 border-emerald-500 shadow-soft-lg">
@@ -393,23 +529,44 @@ export function PaymentModal({
 
                 <div className="space-y-2">
                   <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-                    <Sparkles className="h-3.5 w-3.5 text-emerald-600" /> Payment Successful
+                    <Sparkles className="h-3.5 w-3.5 text-emerald-600" /> Payment Validated &amp; Received
                   </span>
                   <h4 className="text-2xl font-black text-slate-900 dark:text-white">
-                    {formatXAF(amount)} Received
+                    {formatXAF(amount)} Confirmed
                   </h4>
                   <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-sm mx-auto">
-                    Your healthcare appointment/request has been confirmed and logged.
+                    Successfully transferred to merchant <strong>{MERCHANT_ACCOUNT.phone}</strong>. Your healthcare request is confirmed.
                   </p>
+                </div>
+
+                {/* Quick Receipt Summary Box */}
+                <div className="rounded-2xl bg-slate-50 dark:bg-slate-800/60 p-4 text-xs space-y-2 text-left border border-slate-200/80 dark:border-slate-700/60">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 dark:text-slate-400">Merchant Recipient:</span>
+                    <span className="font-mono font-bold text-amber-600 dark:text-amber-400">{MERCHANT_ACCOUNT.phone}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 dark:text-slate-400">Sender Phone:</span>
+                    <span className="font-mono font-semibold">{phone}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 dark:text-slate-400">Transaction ID:</span>
+                    <span className="font-mono text-[11px]">{receipt?.transactionId || transactionId}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 dark:text-slate-400">Status:</span>
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400">VALIDATED &amp; CONFIRMED</span>
+                  </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
                   <button
                     type="button"
                     onClick={() => setShowReceiptModal(true)}
-                    className="flex-1 rounded-2xl bg-primary-600 py-3.5 text-xs font-bold text-white shadow-soft hover:bg-primary-700 transition"
+                    className="flex-1 rounded-2xl bg-primary-600 py-3.5 text-xs font-bold text-white shadow-soft hover:bg-primary-700 transition flex items-center justify-center gap-1.5"
                   >
-                    View & Print Official Receipt
+                    <Receipt className="h-4 w-4" />
+                    <span>View &amp; Print Official Receipt</span>
                   </button>
                   <button
                     type="button"
@@ -434,7 +591,7 @@ export function PaymentModal({
                     Payment Could Not Be Completed
                   </h4>
                   <p className="text-xs text-red-600 dark:text-red-400 max-w-sm mx-auto">
-                    {errorMessage || 'The request timed out or was cancelled on the phone.'}
+                    {errorMessage || 'The payment request timed out or was declined on your phone.'}
                   </p>
                 </div>
 

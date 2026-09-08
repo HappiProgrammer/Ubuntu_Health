@@ -177,11 +177,11 @@ class MoMoService {
     // Simulating status check
     return {
       transactionId,
-      status: 'success',
+      status: 'pending',
       amount: 0,
       currency: 'XAF',
       senderPhone: '',
-      receiverPhone: '',
+      receiverPhone: '671 159 461',
       timestamp: new Date().toISOString(),
       reference: transactionId,
       provider: 'mtn'
@@ -193,11 +193,11 @@ class MoMoService {
     
     return {
       transactionId,
-      status: 'success',
+      status: 'pending',
       amount: 0,
       currency: 'XAF',
       senderPhone: '',
-      receiverPhone: '',
+      receiverPhone: '671 159 461',
       timestamp: new Date().toISOString(),
       reference: transactionId,
       provider: 'orange'

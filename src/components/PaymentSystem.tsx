@@ -76,6 +76,7 @@ export default function PaymentSystem({ userId, userRole }: PaymentSystemProps) 
       provider: txn.provider,
       payerName: txn.payerName || 'Patient / Client',
       phoneNumber: txn.phoneNumber,
+      receiverPhone: txn.receiverPhone || '671 159 461',
       description: txn.description,
       amount: txn.amount,
       fee,
@@ -131,6 +132,31 @@ export default function PaymentSystem({ userId, userRole }: PaymentSystemProps) 
           <Plus className="h-4 w-4" />
           <span>New Mobile Money Payment</span>
         </button>
+      </div>
+
+      {/* Linked Official Receiving Account Banner */}
+      <div className="rounded-2xl bg-gradient-to-r from-amber-500/10 via-primary-500/10 to-emerald-500/10 p-4 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400 text-slate-950 font-black text-xs shadow-sm">
+            MoMo
+          </div>
+          <div>
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 dark:text-amber-400 flex items-center gap-1">
+              <ShieldCheck className="h-3.5 w-3.5" /> Official Merchant Receiving Account
+            </span>
+            <p className="text-base font-black text-slate-900 dark:text-white font-mono">
+              671 159 461
+            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              BridgeCare Santé / Ubuntu Health — All incoming patient & consultation fees routed directly here
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+            <Check className="h-3 w-3" /> Account Active &amp; Linked
+          </span>
+        </div>
       </div>
 
       {/* Stats Cards */}

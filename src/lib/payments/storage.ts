@@ -71,7 +71,13 @@ export const transactionStorage = {
   updateStatus(
     id: string, 
     status: TransactionRecord['status'], 
-    details?: { financialTransactionId?: string; failureReason?: string }
+    details?: { 
+      financialTransactionId?: string; 
+      failureReason?: string;
+      validatedBySender?: boolean;
+      validationCode?: string;
+      validatedAt?: string;
+    }
   ): TransactionRecord | null {
     initStorage();
     const txn = inMemoryTransactions.get(id);
@@ -80,13 +86,22 @@ export const transactionStorage = {
     txn.status = status;
     txn.updatedAt = new Date().toISOString();
     if (status === 'successful') {
-      txn.completedAt = new Date().toISOString();
+      txn.completedAt = txn.completedAt || new Date().toISOString();
     }
     if (details?.financialTransactionId) {
       txn.financialTransactionId = details.financialTransactionId;
     }
     if (details?.failureReason) {
       txn.failureReason = details.failureReason;
+    }
+    if (details?.validatedBySender !== undefined) {
+      txn.validatedBySender = details.validatedBySender;
+    }
+    if (details?.validationCode) {
+      txn.validationCode = details.validationCode;
+    }
+    if (details?.validatedAt) {
+      txn.validatedAt = details.validatedAt;
     }
 
     inMemoryTransactions.set(id, txn);

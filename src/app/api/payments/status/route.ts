@@ -5,6 +5,7 @@ import { transactionStorage } from '@/lib/payments/storage';
 import { mtnMoMoService } from '@/lib/payments/mtnService';
 import { orangeMoneyService } from '@/lib/payments/orangeService';
 import { PaymentReceipt } from '@/lib/payments/types';
+import { MERCHANT_ACCOUNT } from '@/lib/payments/config';
 
 export async function GET(req: NextRequest) {
   try {
@@ -44,6 +45,8 @@ export async function GET(req: NextRequest) {
 
     // Generate receipt object if successful
     let receipt: PaymentReceipt | undefined = undefined;
+    const receiverPhone = updatedTxn.receiverPhone || MERCHANT_ACCOUNT.phone;
+
     if (updatedTxn.status === 'successful') {
       const fee = Math.round(updatedTxn.amount * 0.01); // 1% platform/operator fee
       receipt = {
@@ -53,6 +56,7 @@ export async function GET(req: NextRequest) {
         provider: updatedTxn.provider,
         payerName: updatedTxn.payerName,
         phoneNumber: updatedTxn.phoneNumber,
+        receiverPhone,
         description: updatedTxn.description,
         amount: updatedTxn.amount,
         fee,
@@ -73,6 +77,8 @@ export async function GET(req: NextRequest) {
       amount: updatedTxn.amount,
       currency: updatedTxn.currency,
       phoneNumber: updatedTxn.phoneNumber,
+      receiverPhone,
+      validatedBySender: updatedTxn.validatedBySender,
       financialTransactionId: updatedTxn.financialTransactionId,
       failureReason: updatedTxn.failureReason,
       timestamp: updatedTxn.updatedAt,

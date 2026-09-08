@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { InitiatePaymentRequest, TransactionRecord } from './types';
 import { cleanPhoneForApi } from './helpers';
 import { transactionStorage } from './storage';
+import { MERCHANT_ACCOUNT } from './config';
 
 export class OrangeMoneyService {
   private environment: string;
@@ -74,6 +75,7 @@ export class OrangeMoneyService {
 
   /**
    * Initiate Orange Money Payment
+   * Linked receiving account: 671 159 461
    */
   async initiatePayment(request: InitiatePaymentRequest): Promise<{ transaction: TransactionRecord; paymentUrl?: string }> {
     const referenceId = crypto.randomUUID();
@@ -88,10 +90,12 @@ export class OrangeMoneyService {
       amount: request.amount,
       currency: request.currency || 'XAF',
       phoneNumber: request.phoneNumber,
+      receiverPhone: MERCHANT_ACCOUNT.phone, // 671 159 461
       payerName: request.payerName || 'Patient / Client',
       payerEmail: request.payerEmail,
-      description: request.description || 'CAMIHN Healthcare Consultation',
+      description: request.description || 'BridgeCare Cameroon Santé Consultation',
       serviceType: request.serviceType,
+      validatedBySender: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       metadata: request.metadata
@@ -142,6 +146,7 @@ export class OrangeMoneyService {
 
   /**
    * Check status of Orange Money Payment
+   * Does NOT auto-confirm without sender validation or live API confirmation
    */
   async checkStatus(referenceId: string): Promise<{ status: TransactionRecord['status']; financialId?: string; reason?: string }> {
     const txn = transactionStorage.getByReferenceId(referenceId);
@@ -153,15 +158,7 @@ export class OrangeMoneyService {
       return { status: txn.status, financialId: txn.financialTransactionId, reason: txn.failureReason };
     }
 
-    // Auto-resolve simulation for testing when elapsed time > 5 seconds
-    const elapsed = Date.now() - new Date(txn.createdAt).getTime();
-    if (elapsed > 6000 && txn.status === 'pending') {
-      transactionStorage.updateStatus(txn.id, 'successful', {
-        financialTransactionId: `OM-TRANS-${Math.floor(100000000 + Math.random() * 900000000)}`
-      });
-      return { status: 'successful', financialId: `OM-TRANS-${Date.now()}` };
-    }
-
+    // Status stays pending until sender validates or carrier callback arrives
     return { status: txn.status };
   }
 }

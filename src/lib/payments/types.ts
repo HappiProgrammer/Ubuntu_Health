@@ -16,6 +16,7 @@ export interface InitiatePaymentRequest {
   amount: number;
   currency?: string; // Defaults to 'XAF'
   phoneNumber: string;
+  receiverPhone?: string; // Target: 671 159 461
   payerName?: string;
   payerEmail?: string;
   description: string;
@@ -32,6 +33,7 @@ export interface InitiatePaymentResponse {
   amount: number;
   currency: string;
   phoneNumber: string;
+  receiverPhone: string; // 671 159 461
   description: string;
   paymentUrl?: string;
   message: string;
@@ -48,6 +50,8 @@ export interface PaymentStatusResponse {
   amount: number;
   currency: string;
   phoneNumber: string;
+  receiverPhone?: string;
+  validatedBySender?: boolean;
   financialTransactionId?: string;
   failureReason?: string;
   timestamp: string;
@@ -61,6 +65,7 @@ export interface PaymentReceipt {
   provider: PaymentProvider;
   payerName: string;
   phoneNumber: string;
+  receiverPhone: string; // 671 159 461
   description: string;
   amount: number;
   fee: number;
@@ -79,14 +84,32 @@ export interface TransactionRecord {
   amount: number;
   currency: string;
   phoneNumber: string;
+  receiverPhone: string; // 671 159 461
   payerName: string;
   payerEmail?: string;
   description: string;
   serviceType?: string;
+  validatedBySender?: boolean;
+  validationCode?: string;
+  validatedAt?: string;
   financialTransactionId?: string;
   failureReason?: string;
   createdAt: string;
   updatedAt: string;
   completedAt?: string;
   metadata?: Record<string, any>;
+}
+
+export interface ValidatePaymentRequest {
+  transactionId: string;
+  validationCode?: string;
+}
+
+export interface ValidatePaymentResponse {
+  success: boolean;
+  status: PaymentStatus;
+  message: string;
+  transactionId: string;
+  receiverPhone: string;
+  receipt?: PaymentReceipt;
 }
