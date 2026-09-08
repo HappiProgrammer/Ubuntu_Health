@@ -3,6 +3,7 @@ import { Fraunces, Manrope } from 'next/font/google'
 import { AppointmentQueueProvider } from '@/context/AppointmentQueueContext'
 import './globals.css'
 import { FloatingSupportWidget } from '@/components/FloatingSupportWidget'
+import { HealthChatBot } from '@/components/HealthChatBot'
 
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope' })
 const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces' })
@@ -53,6 +54,7 @@ export default function RootLayout({
           <div id="root" className="min-h-full flex flex-col">
             {children}
             <FloatingSupportWidget />
+            <HealthChatBot />
           </div>
         </AppointmentQueueProvider>
       </body>

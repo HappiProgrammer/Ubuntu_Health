@@ -103,6 +103,10 @@ export async function POST(req: NextRequest) {
       status: 'successful',
       transactionId: updated.id,
       receiverPhone: MERCHANT_ACCOUNT.phone,
+      validatedBySender: true,
+      validationCode: updated.validationCode || 'APPROVED_BY_SENDER',
+      validatedAt: updated.validatedAt || now,
+      financialTransactionId: updated.financialTransactionId || financialId,
       message: `Payment of ${updated.amount} XAF to ${MERCHANT_ACCOUNT.phone} has been verified and confirmed!`,
       receipt
     });

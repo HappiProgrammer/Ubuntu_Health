@@ -7,7 +7,7 @@ export function FloatingSupportWidget() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-6 left-6 z-50 flex flex-col items-start gap-3">
       {/* Expanded Quick Support Menu */}
       {isOpen && (
         <div className="w-72 rounded-3xl border border-white/80 dark:border-white/10 bg-white/90 dark:bg-slate-900/90 p-5 shadow-2xl backdrop-blur-2xl animate-slide-up space-y-4">
